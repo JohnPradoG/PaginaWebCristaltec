@@ -27,10 +27,12 @@ export const siteConfig = {
   tagline: "Soluciones en aluminio, vidrio y PVC diseñadas para tu hogar y negocio",
 
   /**
-   * Dominio final del sitio, sin barra al final. Ej.: "https://www.tudominio.cl".
-   * PENDIENTE: se usa para la URL canónica, el sitemap y las etiquetas Open Graph.
+   * Dominio del sitio, sin barra al final. Se usa para la URL canónica, el
+   * sitemap y las etiquetas Open Graph.
+   * Por ahora es la dirección gratuita de Vercel. Cuando compres un dominio
+   * propio (ej. "https://www.tudominio.cl"), cámbialo aquí.
    */
-  siteUrl: "",
+  siteUrl: "https://cristalte-web-vano6.vercel.app",
 
   /**
    * NÚMERO DE WHATSAPP (WHATSAPP_NUMBER)

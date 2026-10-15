@@ -15,7 +15,7 @@ El sitio funciona sin estos datos, pero **no se debe publicar en producción** h
 | Dato | Campo | Obligatorio |
 |---|---|---|
 | Número de WhatsApp (formato `569XXXXXXXX`, solo dígitos) | `whatsappNumber` | **Sí** |
-| Dominio final (ej. `https://www.tudominio.cl`) | `siteUrl` | **Sí** |
+| Dominio (hoy: dirección gratuita de Vercel; cambiar si compras uno propio) | `siteUrl` | **Sí** (ya configurado) |
 | Teléfono para llamadas | `contact.phone` | No |
 | Correo | `contact.email` | No |
 | Dirección del taller o local | `contact.address` | No |
@@ -39,12 +39,10 @@ npm run verificar
 
 ### Bloqueo de seguridad
 
-Mientras falten `whatsappNumber` o `siteUrl`:
+- Mientras falte `whatsappNumber`, los botones de WhatsApp llevan al formulario de cotización (nunca se genera un enlace inválido) y el formulario avisa que el número todavía no está configurado.
+- Si falta `siteUrl`, `robots.txt` pide a los buscadores no indexar el sitio y una publicación en **producción** en Vercel o Netlify **falla a propósito**.
 
-- Los botones de WhatsApp llevan al formulario de cotización (no se genera ningún enlace inválido).
-- El formulario avisa que el número todavía no está configurado.
-- `robots.txt` pide a los buscadores **no indexar** el sitio.
-- Una publicación en **producción** en Vercel o Netlify **falla a propósito** con un mensaje que indica qué falta. Las vistas previas sí se publican.
+Hoy `siteUrl` apunta a la dirección gratuita de Vercel (`https://cristalte-web-vano6.vercel.app`). Al comprar un dominio propio, cámbialo ahí.
 
 ---
 
@@ -126,7 +124,7 @@ Los SVG son vectoriales (el texto está convertido a trazos). Se generan con `np
 ## 4. Publicar en Internet
 
 ### Opción recomendada: Vercel (gratis para empezar)
-1. Completa `whatsappNumber` y `siteUrl` en `src/config/site.ts` y sube el cambio a GitHub.
+1. Completa `whatsappNumber` (y `siteUrl` si usas un dominio propio) en `src/config/site.ts` y sube el cambio a GitHub.
 2. Entra a [vercel.com](https://vercel.com) con tu cuenta de GitHub → **Add New → Project** → elige el repositorio `PaginaWebCristaltec` → **Deploy**. Vercel detecta Next.js automáticamente.
 3. En **Settings → Domains** agrega tu dominio (ej. `tudominio.cl`) y sigue las instrucciones de DNS que te da Vercel en tu proveedor de dominio (en Chile, el dominio `.cl` se compra en [NIC Chile](https://www.nic.cl)).
 4. Cada cambio que se suba a la rama principal se publica solo.
