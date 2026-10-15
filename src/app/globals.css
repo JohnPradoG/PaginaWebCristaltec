@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+@theme {
+  /* Paleta de marca CRISTALTE */
+  --color-navy: #102d4a;
+  --color-navy-950: #0a1e33;
+  --color-brand: #0878d1;
+  --color-brand-dark: #0665b0;
+  --color-brand-light: #4ba3ea;
+  --color-steel: #8794a0;
+  --color-mist: #f4f7fa;
+  /* Texto secundario con contraste AA sobre blanco y gris claro */
+  --color-ink: #1d2b3a;
+  --color-ink-muted: #4a5b6c;
+  --color-whatsapp: #0f7b3d;
+
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+html {
+  scroll-padding-top: 5.5rem;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  background: #ffffff;
+  color: var(--color-ink);
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+/* Acordeón de preguntas frecuentes */
+details > summary {
+  list-style: none;
+}
+details > summary::-webkit-details-marker {
+  display: none;
+}
+details[open] .faq-icon {
+  transform: rotate(45deg);
+}
+
+dialog::backdrop {
+  background: rgb(10 30 51 / 0.88);
+}
