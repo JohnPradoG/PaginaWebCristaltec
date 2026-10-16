@@ -8,6 +8,7 @@ import { QuoteFormSection } from "@/components/sections/quote-form";
 import { AboutSection } from "@/components/sections/about";
 import { FaqSection } from "@/components/sections/faq";
 import { ContactSection } from "@/components/sections/contact";
+import { PriceSection } from "@/components/sections/prices";
 
 export const metadata = pageMetadata({ title: defaultTitle, description: defaultDescription, path: "/", absoluteTitle: true });
 
@@ -20,6 +21,7 @@ export default function HomePage() {
       <GallerySection limit={6} />
       <CtaBanner />
       <AboutSection />
+      <PriceSection />
       <QuoteFormSection />
       <FaqSection limit={4} />
       <ContactSection />

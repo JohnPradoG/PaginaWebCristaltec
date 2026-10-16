@@ -68,7 +68,7 @@ export function DemoBadge({ className = "" }: { className?: string }) {
   return (
     <span
       className={`pointer-events-none rounded bg-navy-950/75 px-2 py-1 text-[11px] font-semibold tracking-wide text-white ${className}`}
-      title="Fotografía de referencia, no corresponde a un trabajo de CRISTALTE"
+      title="Fotografía de referencia, no corresponde a un trabajo de CRISTALTEC"
     >
       Imagen referencial
     </span>

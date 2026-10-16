@@ -3,18 +3,27 @@ import type { ProjectCategory } from "./projects";
 import type { FaqItem } from "./faq-types";
 
 /**
- * SERVICIOS
+ * SERVICIOS OFICIALES DE CRISTALTEC (lista entregada por la empresa en octubre de 2026)
  * Cada servicio tiene su tarjeta en la portada y su propia página en /<slug>/
  * (por ejemplo /ventanas-de-aluminio/). Cada página apunta a una búsqueda
  * distinta (`searchIntent`) para no competir entre ellas.
  *
- * Edita los textos libremente, pero no agregues promesas de plazos, garantías,
- * certificaciones, marcas o productos (como termopanel) que la empresa no
- * pueda respaldar.
+ * Edita los textos libremente, pero no agregues precios, plazos, garantías,
+ * certificaciones, años de experiencia ni comunas que la empresa no pueda
+ * respaldar. Los precios van en src/content/prices.ts.
  *
- * Si cambias un `slug`, agrega una redirección 301 en vercel.json desde la URL
- * anterior.
+ * Si cambias un `slug`, agrega una redirección 301 en `legacyRedirects` (abajo)
+ * y en vercel.json.
  */
+export type Comparison = {
+  title: string;
+  intro: string;
+  /** Nombres de las dos opciones comparadas. */
+  options: [string, string];
+  rows: { label: string; values: [string, string] }[];
+  note?: string;
+};
+
 export type Service = {
   slug: string;
   /** Nombre corto (tarjetas, menú, formulario). */
@@ -25,14 +34,22 @@ export type Service = {
   h1: string;
   /** Texto corto para la tarjeta. */
   summary: string;
+  /** Mensaje prearmado de WhatsApp, propio de este servicio. */
+  whatsappMessage: string;
   /** Párrafos de introducción. */
   intro: string[];
-  /** Beneficios del producto (información general, no promesas de la empresa). */
+  /** Beneficios (información general del producto, no promesas de la empresa). */
   benefits: { title: string; text: string }[];
-  /** Dónde se usa. */
+  /** Título de la lista de usos. */
+  applicationsTitle?: string;
+  /** Dónde se usa o qué incluye. */
   applications: string[];
+  /** Título de la sección de opciones. */
+  optionsTitle?: string;
   /** Materiales, sistemas y opciones que se pueden conversar. */
   options: { title: string; text: string }[];
+  /** Comparación entre dos alternativas (por ejemplo, monolítico y termopanel). */
+  comparison?: Comparison;
   /** Información útil para cotizar este servicio. */
   quoteTips: string[];
   faqs: FaqItem[];
@@ -46,99 +63,154 @@ export type Service = {
   seo: { title: string; description: string };
 };
 
+const whatsappIntro = "Hola, vengo desde la página web de CRISTALTEC.";
+
+/** Diferencias entre vidrio monolítico y termopanel. Se usa en las páginas de ventanas. */
+const glassComparison: Comparison = {
+  title: "Vidrio monolítico o termopanel: ¿cuál conviene?",
+  intro:
+    "Las ventanas se pueden fabricar con vidrio monolítico o con termopanel. La diferencia está en cuántos vidrios lleva la ventana y en cuánto aísla.",
+  options: ["Vidrio monolítico", "Termopanel (doble vidriado hermético)"],
+  rows: [
+    {
+      label: "Qué es",
+      values: [
+        "Una sola lámina de vidrio.",
+        "Dos vidrios separados por una cámara de aire o gas, sellada en todo su contorno.",
+      ],
+    },
+    {
+      label: "Aislación del frío y del calor",
+      values: [
+        "Básica: el vidrio transmite fácilmente la temperatura exterior.",
+        "Mucho mayor: la cámara sellada frena el paso del frío y del calor.",
+      ],
+    },
+    {
+      label: "Condensación (vidrios empañados)",
+      values: [
+        "Más frecuente en invierno, sobre todo en dormitorios y baños.",
+        "Mucho menor, porque el vidrio interior se mantiene más templado.",
+      ],
+    },
+    {
+      label: "Ruido exterior",
+      values: ["Aísla poco.", "Reduce el ruido; el resultado depende de los vidrios y del cierre de la ventana."],
+    },
+    {
+      label: "Inversión",
+      values: ["Menor.", "Mayor, pero puede ayudar a gastar menos en calefacción."],
+    },
+    {
+      label: "Recomendado para",
+      values: [
+        "Logias, bodegas, zonas interiores o presupuestos ajustados.",
+        "Dormitorios, livings, zonas frías, calles con ruido y departamentos con humedad.",
+      ],
+    },
+  ],
+  note: "Al cotizar te recomendamos la alternativa adecuada para cada ventana. Puedes combinar ambas en una misma casa.",
+};
+
 export const services: Service[] = [
   {
     slug: "ventanas-de-aluminio",
     name: "Ventanas de aluminio",
-    searchIntent: "Quien busca fabricar, cambiar o instalar ventanas de aluminio a medida en su casa, departamento o local.",
-    h1: "Ventanas de aluminio a medida",
-    summary: "Ventanas correderas, proyectantes y ventanales fabricados según las medidas de cada vano.",
+    searchIntent:
+      "Quien busca fabricar, cambiar o instalar ventanas de aluminio a medida, con vidrio monolítico o termopanel, en su casa, departamento o local.",
+    h1: "Ventanas de aluminio a medida, con vidrio monolítico o termopanel",
+    summary: "Ventanas correderas, proyectantes y ventanales de aluminio con vidrio monolítico o termopanel.",
+    whatsappMessage: `${whatsappIntro} Quiero cotizar ventanas de aluminio. ¿Me pueden orientar entre vidrio monolítico y termopanel? Puedo enviar medidas y fotos.`,
     intro: [
-      "Las ventanas de aluminio son una de las soluciones más usadas en Chile por su resistencia, su bajo mantenimiento y la variedad de formatos que permiten. Sirven tanto para una obra nueva como para reemplazar ventanas antiguas que ya no cierran bien.",
-      "En CRISTALTE fabricamos cada ventana según las medidas de tu vano. Te ayudamos a elegir el tipo de apertura, el color del perfil y el vidrio más adecuado para cada ambiente.",
+      "Las ventanas de aluminio son una de las soluciones más usadas en Chile por su resistencia, su bajo mantenimiento y la variedad de formatos que permiten. Sirven para una obra nueva y para reemplazar ventanas antiguas que ya no cierran bien.",
+      "En CRISTALTEC fabricamos e instalamos cada ventana según las medidas de tu vano, con vidrio monolítico o termopanel. Te ayudamos a elegir el tipo de apertura, el color del perfil y el vidrio adecuado para cada ambiente.",
     ],
     benefits: [
       { title: "Bajo mantenimiento", text: "El aluminio no se oxida como el fierro ni necesita pintura periódica. Basta con limpiar perfiles y rieles." },
       { title: "Perfiles delgados", text: "Permite paños de vidrio grandes con marcos finos, lo que deja entrar más luz." },
+      { title: "Con termopanel", text: "Con doble vidriado hermético la ventana aísla mucho mejor el frío, el calor y la condensación." },
       { title: "Muchos formatos", text: "Correderas, proyectantes, abatibles, fijos o combinados en un mismo vano." },
-      { title: "Diseño a elección", text: "Distintos colores y terminaciones de perfil para que combinen con la fachada." },
     ],
     applications: [
       "Dormitorios, livings y cocinas de casas y departamentos",
       "Reemplazo de ventanas antiguas o en mal estado",
       "Ventanales de piso a techo hacia patios y terrazas",
-      "Locales comerciales y oficinas",
+      "Locales comerciales, oficinas y obras nuevas",
     ],
     options: [
       { title: "Tipo de apertura", text: "Corredera para ahorrar espacio, proyectante para ventilar con lluvia, abatible o paño fijo donde no se necesita abrir." },
-      { title: "Color del perfil", text: "Colores y terminaciones disponibles según la línea de perfil elegida. Te mostramos las alternativas al cotizar." },
-      { title: "Tipo de vidrio", text: "Alternativas de vidrio según el uso, la seguridad que necesitas y el presupuesto. Te mostramos las disponibles al cotizar." },
+      { title: "Vidrio", text: "Monolítico (una lámina) o termopanel (doble vidrio con cámara sellada). Más abajo explicamos las diferencias." },
+      { title: "Color del perfil", text: "Colores y terminaciones según la línea de perfil elegida. Te mostramos las alternativas al cotizar." },
       { title: "Accesorios", text: "Manillas, cierres y mallas según el tipo de ventana." },
     ],
+    comparison: glassComparison,
     quoteTips: [
       "Ancho y alto aproximado de cada ventana",
-      "Cuántas ventanas son y en qué ambientes",
+      "Si prefieres vidrio monolítico, termopanel o quieres que te recomendemos",
       "Fotografía de las ventanas actuales o del vano",
       "Si es reemplazo o una obra nueva",
     ],
     faqs: [
       {
+        question: "¿Se puede cambiar el vidrio de mi ventana de aluminio por termopanel?",
+        answer:
+          "Depende del perfil. El termopanel es más grueso que un vidrio monolítico y no todas las ventanas tienen espacio para recibirlo. Con una foto del perfil y las medidas podemos decirte si se puede adaptar o si conviene cambiar la ventana.",
+      },
+      {
         question: "¿Qué ventana de aluminio conviene: corredera o proyectante?",
         answer:
-          "La corredera aprovecha mejor el espacio y es habitual en ventanas anchas y ventanales. La proyectante abre hacia afuera desde abajo y permite ventilar aunque llueva, por lo que se usa mucho en baños y cocinas. Muchas veces se combinan ambas en un mismo vano.",
+          "La corredera aprovecha mejor el espacio y es habitual en ventanas anchas y ventanales. La proyectante abre hacia afuera desde abajo y permite ventilar aunque llueva, por lo que se usa mucho en baños y cocinas. Muchas veces se combinan en un mismo vano.",
       },
       {
-        question: "¿Pueden cambiar mis ventanas antiguas por ventanas de aluminio?",
+        question: "¿Pueden cambiar mis ventanas antiguas por ventanas de aluminio nuevas?",
         answer:
-          "Sí, el reemplazo de ventanas es uno de los trabajos más comunes. Para cotizar necesitamos las medidas aproximadas y una foto de cada ventana; después se confirman las medidas exactas en terreno.",
-      },
-      {
-        question: "¿Cómo se limpian y mantienen las ventanas de aluminio?",
-        answer:
-          "Basta con agua y un detergente suave en perfiles y vidrios, y mantener limpios los rieles para que las hojas corran bien. Evita productos abrasivos o con solventes que dañen la terminación.",
+          "Sí, el reemplazo de ventanas es uno de los trabajos más comunes. Para cotizar necesitamos las medidas aproximadas y una foto de cada ventana; las medidas exactas se confirman en terreno.",
       },
     ],
-    related: ["ventanas-de-pvc", "puertas-de-aluminio-y-vidrio", "cerramientos-de-terrazas"],
+    related: ["ventanas-de-pvc", "reparacion-de-ventanas-y-puertas", "cerramientos-de-terrazas"],
     image: images.ventanasDormitorio,
     extraImages: [images.ventanalCorredera],
     galleryCategory: "Ventanas",
     seo: {
-      title: "Ventanas de aluminio a medida",
+      title: "Ventanas de aluminio a medida, monolítico o termopanel",
       description:
-        "Fabricación e instalación de ventanas de aluminio a medida: correderas, proyectantes y ventanales para casas, departamentos y locales. Cotiza con CRISTALTE.",
+        "Fabricación e instalación de ventanas de aluminio a medida con vidrio monolítico o termopanel: correderas, proyectantes y ventanales. Cotiza con CRISTALTEC.",
     },
   },
   {
     slug: "ventanas-de-pvc",
     name: "Ventanas de PVC",
-    searchIntent: "Quien compara ventanas de PVC para mejorar la aislación térmica y acústica de su casa o departamento.",
-    h1: "Ventanas de PVC a medida",
-    summary: "Ventanas y puertas de PVC para quienes buscan más aislación térmica y acústica.",
+    searchIntent:
+      "Quien compara ventanas de PVC con vidrio monolítico o termopanel para mejorar la aislación térmica y acústica de su casa o departamento.",
+    h1: "Ventanas de PVC con vidrio monolítico o termopanel",
+    summary: "Ventanas de PVC a medida para más aislación térmica y acústica, con monolítico o termopanel.",
+    whatsappMessage: `${whatsappIntro} Quiero cotizar ventanas de PVC y saber si me conviene vidrio monolítico o termopanel. Puedo enviar medidas y fotos.`,
     intro: [
       "El PVC es un material que conduce poco el calor, por eso las ventanas de PVC se eligen cuando se quiere mejorar la aislación del hogar: menos frío en invierno, menos calor en verano y menos ruido de la calle.",
-      "Te ayudamos a comparar si te conviene PVC o aluminio según el ambiente, la orientación y tu presupuesto, y fabricamos cada ventana a la medida del vano.",
+      "En CRISTALTEC fabricamos e instalamos ventanas de PVC a la medida de cada vano, con vidrio monolítico o termopanel. Te ayudamos a comparar si te conviene PVC o aluminio según el ambiente, la orientación y tu presupuesto.",
     ],
     benefits: [
-      { title: "Aislación térmica", text: "El perfil de PVC transmite menos frío y calor que un perfil metálico, lo que ayuda a mantener la temperatura interior." },
+      { title: "Aislación térmica", text: "El perfil de PVC transmite menos frío y calor que un perfil metálico. Con termopanel, la aislación es todavía mayor." },
       { title: "Menos ruido", text: "Con un buen cierre y el vidrio adecuado, ayuda a reducir el ruido exterior." },
-      { title: "Menos condensación", text: "Al ser un perfil más templado, suele presentar menos humedad en los marcos que una ventana antigua." },
+      { title: "Menos condensación", text: "Marcos y vidrios más templados suelen empañarse menos que una ventana antigua." },
       { title: "Fácil de limpiar", text: "No necesita pintura y se limpia con agua y jabón neutro." },
     ],
     applications: [
       "Dormitorios y livings donde se busca más confort",
       "Departamentos en avenidas con ruido",
       "Casas en zonas frías o con mucha exposición al sol",
-      "Puertas de cocina, logia o salida a patio",
+      "Recambio de ventanas que se empañan o filtran aire",
     ],
     options: [
       { title: "Tipo de apertura", text: "Oscilobatiente (abre hacia adentro y también se inclina para ventilar), corredera, abatible o fija." },
+      { title: "Vidrio", text: "Monolítico o termopanel. La aislación final depende mucho del vidrio; más abajo explicamos las diferencias." },
       { title: "Color", text: "Blanco y otros colores o acabados según la línea disponible." },
-      { title: "Vidrio", text: "La aislación final depende mucho del vidrio. Te explicamos las alternativas disponibles para tu proyecto." },
-      { title: "PVC o aluminio", text: "Si el objetivo principal es aislar, el PVC suele ser mejor opción. Si buscas perfiles muy delgados o grandes ventanales, conversemos el aluminio." },
+      { title: "PVC o aluminio", text: "Si lo principal es aislar, el PVC suele ser mejor opción. Si buscas perfiles muy delgados o grandes ventanales, conversemos el aluminio." },
     ],
+    comparison: glassComparison,
     quoteTips: [
       "Medidas aproximadas de cada ventana",
-      "Qué problema quieres resolver: frío, ruido, humedad o cambio de diseño",
+      "Qué quieres resolver: frío, ruido, humedad o cambio de diseño",
       "Fotografías de las ventanas actuales",
       "Piso del departamento, si aplica",
     ],
@@ -146,94 +218,180 @@ export const services: Service[] = [
       {
         question: "¿Qué diferencia hay entre una ventana de PVC y una de aluminio?",
         answer:
-          "El PVC aísla mejor el frío, el calor y el ruido porque conduce menos la temperatura. El aluminio permite perfiles más delgados, paños más grandes y más colores. La elección depende de qué es más importante en cada ambiente.",
+          "El PVC aísla mejor el frío, el calor y el ruido porque conduce menos la temperatura. El aluminio permite perfiles más delgados, paños más grandes y más colores. Ambos se pueden fabricar con vidrio monolítico o termopanel.",
       },
       {
-        question: "¿Las ventanas de PVC sirven para departamentos?",
+        question: "¿Vale la pena una ventana de PVC con vidrio monolítico?",
         answer:
-          "Sí. Son una opción frecuente en departamentos que dan a calles con ruido o que tienen problemas de frío y condensación. Antes de cambiar ventanas en un edificio, revisa si el reglamento de copropiedad exige un color o modelo.",
+          "Puede servir en logias o ambientes donde la aislación no es prioritaria. Si eliges PVC para aislar el frío o el ruido, lo habitual es combinarlo con termopanel para aprovechar las ventajas del material.",
       },
       {
         question: "¿Qué es una ventana oscilobatiente?",
         answer:
           "Es una ventana que se abre hacia adentro como una puerta y que, girando la manilla a otra posición, se inclina desde arriba para ventilar sin abrirla completa. Es muy común en ventanas de PVC.",
       },
+      {
+        question: "¿Puedo cambiar las ventanas de mi departamento por PVC?",
+        answer: "En general sí, pero antes revisa si el reglamento de copropiedad exige un color o modelo para la fachada.",
+      },
     ],
-    related: ["ventanas-de-aluminio", "puertas-de-aluminio-y-vidrio", "cerramientos-de-terrazas"],
+    related: ["ventanas-de-aluminio", "puertas-de-aluminio-y-pvc", "reparacion-de-ventanas-y-puertas"],
     image: images.ventanaPvc,
     extraImages: [images.puertaPvcCocina],
     galleryCategory: "PVC",
     seo: {
-      title: "Ventanas de PVC a medida",
+      title: "Ventanas de PVC con termopanel o vidrio monolítico",
       description:
-        "Ventanas de PVC a medida para mejorar la aislación térmica y acústica de casas y departamentos. Compara PVC y aluminio y cotiza con CRISTALTE.",
+        "Ventanas de PVC a medida con vidrio monolítico o termopanel para aislar frío, calor y ruido en casas y departamentos. Compara opciones y cotiza con CRISTALTEC.",
     },
   },
   {
-    slug: "puertas-de-aluminio-y-vidrio",
-    name: "Puertas de aluminio y vidrio",
-    searchIntent: "Quien necesita una puerta de aluminio o de vidrio para su casa, terraza, oficina o local comercial.",
-    h1: "Puertas de aluminio y vidrio",
-    summary: "Puertas correderas, de abatir y accesos para hogares, oficinas y locales comerciales.",
+    slug: "puertas-de-aluminio-y-pvc",
+    name: "Puertas de aluminio y PVC",
+    searchIntent: "Quien necesita una puerta de aluminio o de PVC para su casa, terraza, cocina, oficina o local comercial.",
+    h1: "Puertas de aluminio y PVC a medida",
+    summary: "Puertas correderas y de abatir de aluminio o PVC para casas, terrazas, oficinas y locales.",
+    whatsappMessage: `${whatsappIntro} Quiero cotizar una puerta de aluminio o PVC. ¿Me pueden orientar sobre el material y el tipo de apertura?`,
     intro: [
-      "Una puerta de aluminio y vidrio conecta ambientes y deja pasar la luz. Se usa para salir a la terraza o al patio, para accesos de locales comerciales y para separar espacios dentro de una oficina.",
-      "Diseñamos cada puerta según el vano, el uso diario que tendrá y el estilo del lugar, y te orientamos en el tipo de apertura y los herrajes.",
+      "Una puerta de aluminio o de PVC con vidrio conecta ambientes y deja pasar la luz. Se usa para salir a la terraza o al patio, en cocinas y logias, en accesos de locales comerciales y en oficinas.",
+      "En CRISTALTEC fabricamos e instalamos cada puerta según el vano, el uso diario que tendrá y el estilo del lugar. Te orientamos para elegir entre aluminio y PVC, el tipo de apertura y los herrajes.",
     ],
     benefits: [
-      { title: "Más luz", text: "El vidrio permite iluminar pasillos, cocinas y livings sin perder privacidad si se usa vidrio con diseño o empavonado." },
-      { title: "Resistencia al uso diario", text: "El aluminio soporta bien el uso frecuente y la intemperie." },
+      { title: "Aluminio: resistencia", text: "Soporta bien el uso frecuente y la intemperie, con perfiles delgados y muchos colores." },
+      { title: "PVC: aislación", text: "Aísla mejor el frío y el ruido; muy usado en puertas de terraza y cocina." },
+      { title: "Más luz", text: "Con vidrio, la puerta ilumina pasillos, cocinas y livings." },
       { title: "Ahorro de espacio", text: "Las puertas correderas no necesitan espacio para abrir." },
-      { title: "Imagen comercial", text: "En locales, una puerta de vidrio muestra el interior e invita a entrar." },
     ],
-    applications: [
-      "Salidas a terraza, balcón o patio",
-      "Accesos de locales comerciales",
-      "Oficinas y salas de reuniones",
-      "Cocinas y logias",
-    ],
+    applications: ["Salidas a terraza, balcón o patio", "Cocinas y logias", "Accesos de locales comerciales", "Oficinas y salas de reuniones"],
     options: [
+      { title: "Material", text: "Aluminio o PVC, según si priorizas perfiles delgados o aislación." },
       { title: "Tipo de apertura", text: "Corredera, de abatir de una o dos hojas, o plegable para vanos anchos." },
-      { title: "Vidrio", text: "Transparente, empavonado u otras alternativas según privacidad y seguridad." },
-      { title: "Perfiles y color", text: "Perfiles en distintos colores, incluido el negro, muy usado en diseños modernos." },
+      { title: "Vidrio", text: "Monolítico o termopanel, transparente o con privacidad, según el uso." },
       { title: "Cerraduras y manillas", text: "Herrajes según el uso: interior, exterior o comercial." },
     ],
     quoteTips: [
       "Ancho y alto del vano",
       "Si la puerta da al exterior o es interior",
-      "Tipo de apertura que prefieres, si lo sabes",
+      "Si prefieres aluminio o PVC, o quieres que te recomendemos",
       "Fotografía del lugar",
     ],
     faqs: [
       {
-        question: "¿Qué puerta conviene para salir a la terraza?",
+        question: "¿Puerta de aluminio o de PVC?",
         answer:
-          "Para vanos anchos se usan mucho las puertas correderas, porque no ocupan espacio al abrir. Si quieres abrir el vano casi completo, una puerta plegable puede ser una alternativa. Lo revisamos según las medidas.",
+          "El aluminio es muy resistente y permite perfiles más delgados y grandes paños de vidrio. El PVC aísla mejor el frío y el ruido. Para una salida a terraza en una zona fría suele convenir PVC; para un acceso comercial de alto tráfico, aluminio.",
       },
       {
-        question: "¿Hacen puertas de vidrio para locales comerciales?",
+        question: "¿Qué puerta conviene para salir a la terraza?",
         answer:
-          "Sí, trabajamos accesos para comercios y oficinas. Al cotizar cuéntanos el flujo de personas y si necesitas alguna cerradura especial.",
+          "Para vanos anchos se usan mucho las puertas correderas, porque no ocupan espacio al abrir. Si quieres abrir el vano casi completo, una puerta plegable puede ser una alternativa.",
+      },
+      {
+        question: "¿Hacen puertas para locales comerciales?",
+        answer: "Sí. Para proyectos comerciales o de varias puertas puedes usar el formulario de proyectos comerciales y contarnos si tienes planos.",
       },
     ],
-    related: ["ventanas-de-aluminio", "cerramientos-de-terrazas", "trabajos-especiales"],
+    related: ["mamparas-de-vidrio", "ventanas-de-pvc", "reparacion-de-ventanas-y-puertas"],
     image: images.puertaComercial,
-    extraImages: [images.puertaTerraza],
+    extraImages: [images.puertaPvcCocina],
     galleryCategory: "Puertas",
     seo: {
-      title: "Puertas de aluminio y vidrio a medida",
+      title: "Puertas de aluminio y PVC a medida",
       description:
-        "Puertas de aluminio y vidrio a medida: correderas, de abatir y accesos para casas, terrazas, oficinas y locales comerciales. Cotiza con CRISTALTE.",
+        "Puertas de aluminio y PVC a medida: correderas, de abatir y plegables para terrazas, cocinas, oficinas y locales comerciales. Cotiza tu puerta con CRISTALTEC.",
+    },
+  },
+  {
+    slug: "shower-doors",
+    name: "Shower doors",
+    searchIntent: "Quien busca instalar un shower door de vidrio templado o de acrílico en la ducha o la tina de su baño.",
+    h1: "Shower doors de vidrio templado y acrílico",
+    summary: "Shower doors para duchas y tinas en vidrio templado o acrílico, a la medida de tu baño.",
+    whatsappMessage: `${whatsappIntro} Quiero cotizar un shower door para mi baño. ¿Me pueden orientar entre vidrio templado y acrílico? Puedo enviar medidas y una foto.`,
+    intro: [
+      "Un shower door reemplaza la cortina de baño por un cierre que evita salpicaduras, se limpia fácil y hace ver el baño más ordenado.",
+      "En CRISTALTEC fabricamos e instalamos shower doors en vidrio templado y en acrílico, a la medida de tu ducha o tina. Te orientamos sobre el material, la configuración y los herrajes.",
+    ],
+    benefits: [
+      { title: "Baño más amplio", text: "El vidrio transparente no corta la vista y el baño se percibe más grande." },
+      { title: "Limpieza más fácil", text: "Superficies lisas, sin cortinas que acumulen humedad." },
+      { title: "Menos agua fuera", text: "Un cierre bien diseñado contiene mejor el agua de la ducha." },
+      { title: "Para cada presupuesto", text: "Vidrio templado o acrílico, según el diseño y la inversión que buscas." },
+    ],
+    applications: ["Duchas en esquina o entre muros", "Tinas que se quieren cerrar", "Remodelaciones de baño", "Baños de departamentos nuevos sin cierre"],
+    options: [
+      { title: "Corredero", text: "Hojas que se deslizan. Ideal cuando no hay espacio para abrir una puerta y en tinas." },
+      { title: "Abatible", text: "Puerta que gira sobre bisagras. Se ve más limpia, pero necesita espacio para abrir." },
+      { title: "Paño fijo", text: "Un vidrio fijo para duchas amplias." },
+      { title: "Herrajes y perfiles", text: "Terminaciones de herrajes y perfiles según el diseño." },
+    ],
+    comparison: {
+      title: "Vidrio templado o acrílico: ¿cuál elegir?",
+      intro: "Los dos materiales sirven para cerrar la ducha. Cambian en aspecto, resistencia, peso e inversión.",
+      options: ["Vidrio templado", "Acrílico"],
+      rows: [
+        {
+          label: "Qué es",
+          values: ["Vidrio tratado con calor para hacerlo más resistente que un vidrio común.", "Placa de plástico rígido y liviano, normalmente con marco de aluminio."],
+        },
+        {
+          label: "Seguridad",
+          values: ["Si se rompe, se fragmenta en trozos pequeños, menos cortantes que un vidrio común.", "No se quiebra como el vidrio."],
+        },
+        {
+          label: "Aspecto y duración",
+          values: ["Transparente y estable en el tiempo.", "Transparente, translúcido o con diseño; con los años puede rayarse u opacarse."],
+        },
+        { label: "Peso", values: ["Más pesado; requiere herrajes adecuados.", "Liviano."] },
+        { label: "Inversión", values: ["Mayor.", "Menor."] },
+        {
+          label: "Recomendado para",
+          values: ["Baños principales y remodelaciones donde el diseño importa.", "Baños de visitas, arriendos o presupuestos ajustados."],
+        },
+      ],
+    },
+    quoteTips: [
+      "Medidas aproximadas del vano de la ducha o tina",
+      "Si prefieres vidrio templado o acrílico",
+      "Fotografía del baño",
+      "Si es ducha o tina",
+    ],
+    faqs: [
+      {
+        question: "¿Shower door corredero o abatible?",
+        answer:
+          "El corredero no necesita espacio para abrir y se usa mucho en baños pequeños y tinas. El abatible tiene un aspecto más limpio, pero necesita espacio frente a la ducha.",
+      },
+      {
+        question: "¿Cómo se limpia un shower door?",
+        answer:
+          "Lo ideal es secarlo con un limpiavidrios de goma después de cada uso y limpiarlo con un producto suave, sin abrasivos. En el acrílico, evita esponjas ásperas que lo rayen.",
+      },
+      {
+        question: "¿Reparan shower doors que no corren bien?",
+        answer: "Sí. Cambiamos carros, guías, burletes y herrajes de shower doors. Revisa la página de reparación y mantenimiento.",
+      },
+    ],
+    related: ["mamparas-de-vidrio", "reparacion-de-ventanas-y-puertas", "puertas-de-aluminio-y-pvc"],
+    image: images.showerMarmol,
+    extraImages: [images.showerBano, images.showerAzulejo],
+    galleryCategory: "Shower doors",
+    seo: {
+      title: "Shower doors de vidrio templado y acrílico",
+      description:
+        "Shower doors a medida en vidrio templado o acrílico para duchas y tinas: correderos, abatibles o fijos. Cotiza el shower door de tu baño con CRISTALTEC.",
     },
   },
   {
     slug: "cerramientos-de-terrazas",
     name: "Cerramientos de terrazas",
-    searchIntent: "Quien quiere cerrar la terraza o el balcón con vidrio y aluminio para aprovecharlo todo el año.",
+    searchIntent: "Quien quiere cerrar la terraza o el balcón con aluminio y vidrio para aprovecharlo todo el año.",
     h1: "Cerramientos de terrazas y balcones",
     summary: "Cierres de terrazas y balcones con aluminio y vidrio para usar el espacio todo el año.",
+    whatsappMessage: `${whatsappIntro} Quiero cotizar el cierre de mi terraza o balcón. Puedo enviar medidas aproximadas y fotos.`,
     intro: [
       "Cerrar una terraza o un balcón permite sumar metros útiles al hogar y usarlos en invierno, protegidos del viento, la lluvia y el polvo. Es uno de los proyectos más pedidos en casas y departamentos.",
-      "Trabajamos cerramientos en aluminio y vidrio adaptados a las medidas y a la arquitectura de cada lugar. Te ayudamos a comparar sistemas correderos y plegables para elegir el que mejor se ajuste a tu espacio.",
+      "En CRISTALTEC fabricamos e instalamos cerramientos de aluminio y vidrio adaptados a las medidas y a la arquitectura de cada lugar. Te ayudamos a comparar sistemas correderos y plegables.",
     ],
     benefits: [
       { title: "Más metros útiles", text: "La terraza pasa a ser comedor, sala de estar, escritorio o zona de juegos." },
@@ -241,17 +399,12 @@ export const services: Service[] = [
       { title: "Uso todo el año", text: "El espacio se puede usar también en otoño e invierno." },
       { title: "Luz natural", text: "El vidrio mantiene la vista y la luminosidad." },
     ],
-    applications: [
-      "Balcones y terrazas de departamentos",
-      "Terrazas de casas hacia el patio o el jardín",
-      "Quinchos y zonas de asado",
-      "Terrazas de cafeterías y restaurantes",
-    ],
+    applications: ["Balcones y terrazas de departamentos", "Terrazas de casas hacia el patio o el jardín", "Quinchos y zonas de asado", "Terrazas de cafeterías y restaurantes"],
     options: [
-      { title: "Sistema corredero", text: "Hojas que se deslizan sobre rieles. Es práctico y conveniente en muchos casos." },
+      { title: "Sistema corredero", text: "Hojas que se deslizan sobre rieles. Práctico y conveniente en muchos casos." },
       { title: "Sistema plegable", text: "Las hojas se pliegan hacia un costado y dejan el vano casi completamente abierto." },
       { title: "Perfiles y color", text: "Perfiles de aluminio en distintos colores y terminaciones." },
-      { title: "Vidrio", text: "Distintas alternativas de vidrio según seguridad, altura y presupuesto." },
+      { title: "Vidrio", text: "Monolítico o termopanel, según cuánto quieras aislar el espacio." },
     ],
     quoteTips: [
       "Medidas aproximadas de ancho y alto",
@@ -263,248 +416,211 @@ export const services: Service[] = [
       {
         question: "¿Necesito permiso para cerrar la terraza de mi departamento?",
         answer:
-          "En un edificio debes revisar el reglamento de copropiedad y consultar a la administración, porque puede exigir un sistema o color determinado. Según el caso, también puede requerirse un trámite en la dirección de obras de la municipalidad. Te recomendamos confirmarlo antes de cerrar.",
+          "En un edificio debes revisar el reglamento de copropiedad y consultar a la administración, porque puede exigir un sistema o color determinado. Según el caso, también puede requerirse un trámite en la dirección de obras municipal. Confírmalo antes de cerrar.",
       },
       {
         question: "¿Qué es mejor: cierre corredero o plegable?",
         answer:
-          "El corredero suele ser más simple y económico y funciona bien en la mayoría de las terrazas. El plegable permite abrir casi todo el vano, ideal si en verano quieres la terraza abierta. Depende del uso que le darás.",
+          "El corredero suele ser más simple y económico y funciona bien en la mayoría de las terrazas. El plegable permite abrir casi todo el vano, ideal si en verano quieres la terraza abierta.",
       },
       {
         question: "¿Cuánto cuesta cerrar una terraza?",
         answer:
-          "Depende de los metros lineales, la altura, el sistema y el vidrio elegido. Con las medidas aproximadas y algunas fotos podemos preparar una cotización para tu caso.",
+          "Depende de los metros lineales, la altura, el sistema y el vidrio elegido. Con las medidas aproximadas y algunas fotos preparamos una cotización para tu caso.",
       },
     ],
-    related: ["barandas-de-vidrio", "puertas-de-aluminio-y-vidrio", "ventanas-de-aluminio"],
+    related: ["ventanas-de-aluminio", "mamparas-de-vidrio", "puertas-de-aluminio-y-pvc"],
     image: images.terrazaPlegable,
     extraImages: [images.balconCerrado, images.terrazaCasa],
     galleryCategory: "Terrazas",
     seo: {
       title: "Cerramientos de terrazas y balcones",
       description:
-        "Cerramientos de terrazas y balcones en aluminio y vidrio, correderos o plegables, para casas y departamentos. Cotiza tu cierre de terraza con CRISTALTE.",
+        "Cerramientos de terrazas y balcones en aluminio y vidrio, correderos o plegables, para casas y departamentos. Cotiza el cierre de tu terraza con CRISTALTEC.",
     },
   },
   {
-    slug: "shower-doors",
-    name: "Shower doors y mamparas de baño",
-    searchIntent: "Quien busca instalar un shower door o una mampara de vidrio en la ducha o la tina de su baño.",
-    h1: "Shower doors y mamparas de baño",
-    summary: "Shower doors y mamparas de vidrio para duchas y tinas, a la medida de tu baño.",
+    slug: "mamparas-de-vidrio",
+    name: "Mamparas de vidrio",
+    searchIntent: "Quien busca una mampara de vidrio para el acceso, el living, la terraza o para dividir una oficina o un local.",
+    h1: "Mamparas de vidrio a medida",
+    summary: "Mamparas de vidrio para accesos, livings, terrazas, oficinas y locales comerciales.",
+    whatsappMessage: `${whatsappIntro} Quiero cotizar una mampara de vidrio. Les cuento dónde va y les envío medidas y fotos.`,
     intro: [
-      "Un shower door reemplaza la cortina de baño por un cierre de vidrio que evita salpicaduras, se limpia fácil y hace ver el baño más amplio y luminoso.",
-      "Diseñamos cada shower door según las medidas de tu ducha o tina, y te orientamos sobre configuraciones fijas, abatibles o correderas, y sobre los herrajes y terminaciones disponibles.",
+      "Una mampara de vidrio cierra o divide un espacio sin quitarle luz. Se usa como cierre de acceso, como puerta corredera entre el living y la terraza, y como división de oficinas, consultas y locales comerciales.",
+      "En CRISTALTEC diseñamos, fabricamos e instalamos mamparas a la medida del vano, fijas o con puertas correderas o de abatir.",
     ],
     benefits: [
-      { title: "Baño más amplio", text: "El vidrio transparente no corta la vista y el baño se percibe más grande." },
-      { title: "Limpieza más fácil", text: "Una superficie lisa, sin cortinas que acumulen humedad." },
-      { title: "Menos agua fuera de la ducha", text: "Un cierre bien diseñado contiene mejor el agua." },
-      { title: "Diseño a elección", text: "Con perfiles visibles o con herrajes mínimos, según el estilo." },
+      { title: "Separa sin oscurecer", text: "Divide ambientes manteniendo la luz natural y la sensación de amplitud." },
+      { title: "Imagen moderna", text: "Líneas limpias para hogares, oficinas y comercios." },
+      { title: "Privacidad a elección", text: "Vidrio transparente o con tratamientos que dan privacidad." },
+      { title: "A medida", text: "Se adapta a vanos amplios, dobles alturas o espacios poco habituales." },
     ],
     applications: [
-      "Duchas en esquina o entre muros",
-      "Tinas que se quieren cerrar con vidrio",
-      "Remodelaciones de baño",
-      "Baños de departamentos nuevos sin cierre",
-    ],
-    options: [
-      { title: "Corredera", text: "Hojas que se deslizan. Ideal cuando no hay espacio para abrir una puerta." },
-      { title: "Abatible", text: "Puerta que gira sobre bisagras. Se ve más limpia, pero necesita espacio para abrir." },
-      { title: "Paño fijo", text: "Un vidrio fijo tipo \"walk-in\" para duchas amplias." },
-      { title: "Herrajes y vidrio", text: "Terminaciones de herrajes y tipos de vidrio disponibles según el diseño." },
-    ],
-    quoteTips: [
-      "Medidas aproximadas del vano de la ducha o tina",
-      "Fotografía del baño",
-      "Si es ducha o tina",
-      "Estilo que te gusta (con o sin perfiles visibles, por ejemplo)",
-    ],
-    faqs: [
-      {
-        question: "¿Qué diferencia hay entre un shower door y una mampara?",
-        answer:
-          "En Chile ambos nombres se usan para el cierre de vidrio de la ducha o la tina. \"Shower door\" se usa más para los cierres de vidrio con herrajes mínimos y \"mampara\" de forma más general.",
-      },
-      {
-        question: "¿Shower door corredero o abatible?",
-        answer:
-          "El corredero no necesita espacio para abrir y se usa mucho en baños pequeños o en tinas. El abatible tiene un aspecto más limpio, pero necesita espacio frente a la ducha. Lo vemos según tus medidas.",
-      },
-      {
-        question: "¿Cómo se limpia un shower door?",
-        answer:
-          "Lo ideal es secar el vidrio con un limpiavidrios de goma después de cada uso y limpiarlo con un producto suave, sin abrasivos, para evitar manchas de sarro.",
-      },
-    ],
-    related: ["espejos-a-medida", "trabajos-especiales", "ventanas-de-aluminio"],
-    image: images.showerMarmol,
-    extraImages: [images.showerBano, images.showerAzulejo],
-    galleryCategory: "Shower doors",
-    seo: {
-      title: "Shower doors y mamparas de baño a medida",
-      description:
-        "Shower doors y mamparas de vidrio a medida para duchas y tinas: correderos, abatibles o fijos. Cotiza el shower door de tu baño con CRISTALTE.",
-    },
-  },
-  {
-    slug: "espejos-a-medida",
-    name: "Espejos a medida",
-    searchIntent: "Quien busca un espejo cortado a medida para baño, dormitorio, gimnasio o local comercial.",
-    h1: "Espejos a medida",
-    summary: "Espejos cortados a medida para baños, dormitorios, gimnasios y locales comerciales.",
-    intro: [
-      "Un espejo bien ubicado amplía visualmente un espacio y aporta luz. Fabricamos espejos a la medida exacta del muro o del mueble, para que el resultado se vea integrado y no como un accesorio.",
-      "Te asesoramos en el tamaño, la forma y la forma de instalación según el lugar donde irá el espejo.",
-    ],
-    benefits: [
-      { title: "Amplitud", text: "Duplica visualmente el espacio en baños, pasillos y dormitorios." },
-      { title: "Más luz", text: "Refleja la luz natural y la artificial." },
-      { title: "Medida exacta", text: "Cubre el muro o el vano que necesitas, sin piezas estándar que no calzan." },
-      { title: "Funcional", text: "Indispensable en gimnasios, salas de baile, peluquerías y probadores." },
-    ],
-    applications: [
-      "Baños y vestidores",
-      "Dormitorios y pasillos",
-      "Gimnasios y salas de baile",
-      "Peluquerías, tiendas y probadores",
-    ],
-    options: [
-      { title: "Tamaño y forma", text: "Rectangulares, de gran formato o con otras formas según factibilidad." },
-      { title: "Terminación de cantos", text: "Distintas terminaciones de borde según el uso y el diseño." },
-      { title: "Instalación", text: "Fijación al muro o al mueble según el tamaño y el lugar." },
-    ],
-    quoteTips: [
-      "Medidas del espejo o del muro",
-      "Lugar donde irá instalado",
-      "Fotografía del espacio",
-    ],
-    faqs: [
-      {
-        question: "¿Hacen espejos de gran tamaño para gimnasios o salas de baile?",
-        answer:
-          "Sí, trabajamos espejos de gran formato. Para cotizar necesitamos el largo y el alto del muro y una foto del lugar.",
-      },
-      {
-        question: "¿Cómo se instala un espejo grande?",
-        answer:
-          "Depende del tamaño, el peso y el tipo de muro. Al cotizar te indicamos la forma de fijación adecuada para tu caso.",
-      },
-    ],
-    related: ["shower-doors", "trabajos-especiales", "barandas-de-vidrio"],
-    image: images.espejoGrande,
-    extraImages: [images.espejoMuro],
-    galleryCategory: "Espejos",
-    seo: {
-      title: "Espejos a medida para hogar y comercio",
-      description:
-        "Espejos a medida para baños, dormitorios, gimnasios y locales comerciales, en el tamaño exacto que necesitas. Cotiza tu espejo con CRISTALTE.",
-    },
-  },
-  {
-    slug: "barandas-de-vidrio",
-    name: "Barandas de vidrio",
-    searchIntent: "Quien busca barandas de vidrio para escaleras, terrazas, balcones o segundos pisos.",
-    h1: "Barandas de vidrio",
-    summary: "Barandas de vidrio para escaleras, terrazas, balcones y segundos pisos.",
-    intro: [
-      "Las barandas de vidrio dan seguridad sin tapar la vista. Son una alternativa moderna para escaleras, segundos pisos, terrazas y balcones, porque mantienen la luz y la sensación de amplitud.",
-      "Diseñamos cada baranda según el lugar, la altura y el sistema de fijación más adecuado para tu proyecto.",
-    ],
-    benefits: [
-      { title: "Vista despejada", text: "No interrumpen la vista hacia el jardín, el paisaje o el interior." },
-      { title: "Diseño moderno", text: "Líneas limpias que se adaptan a estilos contemporáneos." },
-      { title: "Más luz", text: "Permiten que la luz pase entre pisos y ambientes." },
-      { title: "Fácil mantención", text: "Basta con limpiar el vidrio y revisar la fijación." },
-    ],
-    applications: [
-      "Escaleras interiores",
-      "Segundos pisos y dobles alturas",
-      "Terrazas y balcones",
-      "Bordes de piscinas y quinchos",
-    ],
-    options: [
-      { title: "Sistema de fijación", text: "Distintos sistemas según la estructura existente y el diseño buscado." },
-      { title: "Pasamanos", text: "Con o sin pasamanos superior, según el uso y la altura." },
-      { title: "Vidrio", text: "Vidrio de seguridad adecuado para barandas. Te explicamos las alternativas al cotizar." },
-    ],
-    quoteTips: [
-      "Largo total de la baranda",
-      "Lugar de instalación (escalera, terraza, balcón)",
-      "Fotografía del lugar y del borde donde se fijará",
-    ],
-    faqs: [
-      {
-        question: "¿Las barandas de vidrio son seguras?",
-        answer:
-          "Una baranda de vidrio debe hacerse con vidrio de seguridad y un sistema de fijación adecuado a la altura y al uso. Por eso cada proyecto se evalúa en terreno antes de fabricar.",
-      },
-      {
-        question: "¿Se puede poner baranda de vidrio en una escalera existente?",
-        answer:
-          "En muchos casos sí. Depende de la estructura de la escalera y de dónde se puede fijar. Envíanos fotos y lo revisamos.",
-      },
-    ],
-    related: ["cerramientos-de-terrazas", "trabajos-especiales", "puertas-de-aluminio-y-vidrio"],
-    image: images.barandaEscalera,
-    extraImages: [images.barandaVentanal, images.barandaMarmol],
-    galleryCategory: "Barandas",
-    seo: {
-      title: "Barandas de vidrio para escaleras y terrazas",
-      description:
-        "Barandas de vidrio a medida para escaleras, terrazas, balcones y segundos pisos. Seguridad sin tapar la vista. Cotiza tu baranda con CRISTALTE.",
-    },
-  },
-  {
-    slug: "trabajos-especiales",
-    name: "Trabajos especiales en vidrio y aluminio",
-    searchIntent: "Quien necesita un trabajo en vidrio o aluminio que no es estándar: divisiones de oficina, separaciones de ambientes o proyectos a medida.",
-    h1: "Divisiones de vidrio y trabajos especiales en aluminio",
-    summary: "Divisiones de oficina, separaciones de ambientes y proyectos a medida en vidrio y aluminio.",
-    intro: [
-      "Hay proyectos que no encajan en un catálogo: una división de vidrio para una oficina, una separación entre la cocina y el living, un cierre especial o una pieza fuera de medida.",
-      "Cuéntanos tu idea. Revisamos la factibilidad y te proponemos una solución a medida en vidrio y aluminio.",
-    ],
-    benefits: [
-      { title: "Espacios luminosos", text: "Las divisiones de vidrio separan sin quitar luz." },
-      { title: "Flexibilidad", text: "Soluciones adaptadas a medidas y usos poco habituales." },
-      { title: "Imagen profesional", text: "Oficinas y comercios con un aspecto moderno y ordenado." },
-    ],
-    applications: [
+      "Mamparas de acceso a casas y edificios",
+      "Cierres entre living y terraza",
       "Divisiones de oficinas y salas de reuniones",
-      "Separación de ambientes en el hogar",
-      "Proyectos para constructoras y arquitectos",
-      "Piezas de vidrio o aluminio fuera de estándar",
+      "Locales comerciales y consultas",
     ],
     options: [
-      { title: "Divisiones fijas o con puerta", text: "Paños fijos, puertas correderas o de abatir integradas." },
-      { title: "Privacidad", text: "Vidrio transparente, empavonado u otras alternativas." },
-      { title: "Perfiles", text: "Perfiles de aluminio en distintos colores o soluciones con perfiles mínimos." },
+      { title: "Configuración", text: "Paños fijos, puertas correderas, de abatir o combinaciones." },
+      { title: "Vidrio", text: "Alternativas de vidrio de seguridad según el uso y la ubicación de la mampara." },
+      { title: "Privacidad", text: "Transparente o con tratamientos que limitan la vista." },
+      { title: "Perfiles", text: "Perfiles de aluminio en distintos colores, incluido el negro." },
     ],
     quoteTips: [
-      "Descripción de lo que necesitas",
-      "Medidas aproximadas",
+      "Dónde irá la mampara (acceso, living, oficina)",
+      "Ancho y alto del vano",
+      "Si necesitas puerta y de qué tipo",
       "Fotografías, planos o referencias, si los tienes",
     ],
     faqs: [
       {
-        question: "¿Hacen divisiones de vidrio para oficinas?",
+        question: "¿Qué diferencia hay entre una mampara y un shower door?",
         answer:
-          "Sí, trabajamos divisiones de vidrio para oficinas y comercios. Envíanos las medidas o un plano y te orientamos.",
+          "El shower door es el cierre de la ducha o la tina. La mampara es un cierre o división de vidrio para otros espacios: accesos, livings, terrazas y oficinas.",
       },
       {
-        question: "¿Trabajan con constructoras o arquitectos?",
-        answer:
-          "Sí, podemos cotizar proyectos a partir de planos y especificaciones. Escríbenos con la información disponible.",
+        question: "¿Hacen mamparas para oficinas y locales?",
+        answer: "Sí. Para proyectos con varias mamparas o divisiones puedes usar el formulario de proyectos comerciales.",
       },
     ],
-    related: ["puertas-de-aluminio-y-vidrio", "espejos-a-medida", "barandas-de-vidrio"],
-    image: images.divisionOficina,
-    extraImages: [images.pasilloVidrio],
+    related: ["puertas-de-aluminio-y-pvc", "cerramientos-de-terrazas", "shower-doors"],
+    image: images.puertaTerraza,
+    extraImages: [images.divisionOficina, images.pasilloVidrio],
+    galleryCategory: "Mamparas",
     seo: {
-      title: "Divisiones de vidrio y trabajos en aluminio",
+      title: "Mamparas de vidrio a medida",
       description:
-        "Divisiones de vidrio para oficinas y hogares, separaciones de ambientes y proyectos especiales en vidrio y aluminio a medida. Cotiza con CRISTALTE.",
+        "Mamparas de vidrio a medida para accesos, livings, terrazas, oficinas y locales comerciales, fijas o con puerta. Cotiza tu mampara con CRISTALTEC.",
+    },
+  },
+  {
+    slug: "vitrinas-a-medida",
+    name: "Vitrinas a medida",
+    searchIntent: "Quien necesita una vitrina de vidrio a medida para exhibir productos en un local o colecciones en su casa.",
+    h1: "Vitrinas de vidrio a medida",
+    summary: "Vitrinas de vidrio y aluminio a medida para locales comerciales, exhibición y hogar.",
+    whatsappMessage: `${whatsappIntro} Quiero cotizar una vitrina a medida. Les cuento qué quiero exhibir y les envío medidas y una referencia.`,
+    intro: [
+      "Una vitrina bien hecha protege lo que exhibes y lo muestra mejor. Se usa en locales comerciales para presentar productos y en el hogar para colecciones, vajilla o recuerdos.",
+      "En CRISTALTEC fabricamos vitrinas de vidrio y aluminio a la medida del espacio y de lo que quieres exhibir.",
+    ],
+    benefits: [
+      { title: "Exhibe y protege", text: "Los productos u objetos quedan a la vista y protegidos del polvo y del contacto." },
+      { title: "A la medida del espacio", text: "Se adapta al muro, al mesón o al rincón disponible." },
+      { title: "Imagen ordenada", text: "Ayuda a presentar mejor los productos en un local." },
+    ],
+    applications: [
+      "Locales comerciales y tiendas",
+      "Mostradores y exhibidores",
+      "Colecciones, vajilla y objetos en el hogar",
+      "Oficinas, recepciones e instituciones",
+    ],
+    options: [
+      { title: "Formato", text: "Vitrina de mostrador, mural o de pie, según el lugar." },
+      { title: "Puertas", text: "Correderas, abatibles o sin puertas, según el uso." },
+      { title: "Repisas", text: "Cantidad y altura de repisas según lo que se exhibe." },
+      { title: "Perfiles", text: "Con perfiles de aluminio o con perfilería mínima, según el diseño." },
+    ],
+    quoteTips: [
+      "Alto, ancho y fondo aproximados",
+      "Qué vas a exhibir",
+      "Dónde irá: mesón, muro o piso",
+      "Una foto del lugar o una referencia de lo que te gusta",
+    ],
+    faqs: [
+      {
+        question: "¿Hacen vitrinas para locales comerciales?",
+        answer:
+          "Sí, fabricamos vitrinas a medida para comercios. Si necesitas varias, usa el formulario de proyectos comerciales y cuéntanos las medidas.",
+      },
+      {
+        question: "¿Puedo pedir una vitrina con medidas especiales?",
+        answer: "Sí, cada vitrina se fabrica a medida. Envíanos alto, ancho y fondo aproximados y lo que quieres exhibir.",
+      },
+    ],
+    related: ["mamparas-de-vidrio", "puertas-de-aluminio-y-pvc", "reparacion-de-ventanas-y-puertas"],
+    image: images.vitrinaExhibicion,
+    extraImages: [],
+    galleryCategory: "Vitrinas",
+    seo: {
+      title: "Vitrinas de vidrio a medida",
+      description:
+        "Vitrinas de vidrio y aluminio a medida para locales comerciales, mostradores y el hogar. Cuéntanos qué quieres exhibir y cotiza tu vitrina con CRISTALTEC.",
+    },
+  },
+  {
+    slug: "reparacion-de-ventanas-y-puertas",
+    name: "Reparación y mantenimiento",
+    searchIntent:
+      "Quien tiene una ventana, puerta, shower door o mampara de aluminio, PVC o vidrio que no corre, no cierra, filtra o tiene un vidrio roto o un termopanel empañado.",
+    h1: "Reparación y mantenimiento de ventanas, puertas y sistemas de aluminio, PVC y vidrio",
+    summary: "Reparamos ventanas, puertas, shower doors y mamparas que no corren, no cierran, filtran o tienen vidrios dañados.",
+    whatsappMessage: `${whatsappIntro} Necesito reparar una ventana, puerta o cierre de aluminio, PVC o vidrio. Les envío fotos del problema.`,
+    intro: [
+      "Una ventana que no corre, una puerta que no cierra, un vidrio quebrado o un termopanel empañado no siempre requieren cambiar todo. Muchas veces se resuelven reparando o cambiando piezas.",
+      "En CRISTALTEC reparamos y mantenemos toda clase de ventanas, puertas y sistemas de aluminio, PVC y vidrio. Envíanos fotos del problema y te orientamos.",
+    ],
+    benefits: [
+      { title: "Evita cambiar todo", text: "Cambiar carros, burletes o cierres suele costar menos que una ventana nueva." },
+      { title: "Menos filtraciones", text: "Burletes y sellos nuevos reducen el paso de aire, agua y polvo." },
+      { title: "Más seguridad", text: "Cierres y manillas que vuelven a trabar bien." },
+      { title: "Más vida útil", text: "El mantenimiento preventivo alarga la vida de rieles, carros y herrajes." },
+    ],
+    applicationsTitle: "Qué reparamos",
+    applications: [
+      "Ventanas y puertas correderas que no corren o se salen del riel (carros y rodamientos)",
+      "Cierres, manillas, pestillos y bisagras dañados",
+      "Burletes, felpas y sellos gastados que dejan pasar aire, agua o ruido",
+      "Vidrios quebrados, monolíticos o termopanel",
+      "Termopaneles empañados por dentro (cambio de la unidad de vidrio)",
+      "Puertas descuadradas o que rozan",
+      "Shower doors y mamparas que no corren o tienen piezas sueltas",
+      "Filtraciones por sellos y siliconas en mal estado",
+    ],
+    optionsTitle: "Mantenimiento preventivo",
+    options: [
+      { title: "Limpieza y ajuste", text: "Limpieza de rieles y desagües, ajuste de hojas y revisión de cierres." },
+      { title: "Cambio de piezas de desgaste", text: "Carros, felpas y burletes antes de que fallen." },
+      { title: "Revisión de sellos", text: "Silicona y sellos perimetrales para evitar filtraciones." },
+      { title: "Edificios, oficinas y comercios", text: "Revisiones de varias unidades. Usa el formulario de proyectos comerciales." },
+    ],
+    quoteTips: [
+      "Fotografía del problema y de la ventana o puerta completa",
+      "Material: aluminio, PVC o solo vidrio",
+      "Medidas aproximadas, si es un vidrio quebrado",
+      "Cuántas ventanas o puertas necesitan reparación",
+    ],
+    faqs: [
+      {
+        question: "¿Por qué mi termopanel se empañó por dentro?",
+        answer:
+          "Cuando aparece humedad entre los dos vidrios, el sello del termopanel falló y entró aire húmedo a la cámara. No se soluciona limpiando: se cambia la unidad de termopanel, normalmente sin cambiar la ventana.",
+      },
+      {
+        question: "Mi ventana corredera está dura o se sale del riel, ¿tiene arreglo?",
+        answer:
+          "Casi siempre. Lo habitual es que los carros o rodamientos estén gastados o que el riel esté sucio o dañado. Con una foto podemos orientarte.",
+      },
+      {
+        question: "¿Reparan ventanas que no instalaron ustedes?",
+        answer:
+          "Sí, reparamos ventanas, puertas y sistemas de aluminio, PVC y vidrio aunque no los hayamos instalado. Algunas piezas dependen de la línea del perfil, por eso pedimos fotos.",
+      },
+      {
+        question: "¿Cada cuánto conviene hacer mantenimiento?",
+        answer:
+          "Conviene limpiar rieles y desagües con frecuencia y revisar carros, burletes y cierres periódicamente, sobre todo antes del invierno.",
+      },
+    ],
+    related: ["ventanas-de-aluminio", "ventanas-de-pvc", "shower-doors"],
+    image: images.ventanalCorredera,
+    extraImages: [images.ventanaPvc],
+    seo: {
+      title: "Reparación de ventanas, puertas y termopanel",
+      description:
+        "Reparación y mantenimiento de ventanas, puertas, shower doors y mamparas de aluminio, PVC y vidrio: carros, burletes, cierres, vidrios rotos y termopanel empañado.",
     },
   },
 ];
@@ -522,16 +638,20 @@ export function getService(slug: string): Service | undefined {
 export const serviceOptions = [...services.map((s) => s.name), "Otro / no estoy seguro"];
 
 /**
- * URLs anteriores (/servicios/...) que se redirigen con 301 en vercel.json.
- * Se dejan aquí para que las pruebas verifiquen que la redirección existe.
+ * URLs anteriores que se redirigen con 301 en vercel.json, en un solo salto.
+ * Clave: ruta antigua. Valor: ruta nueva. Las pruebas verifican que coincidan.
  */
-export const legacyServiceSlugs: Record<string, string> = {
-  "cerramientos-de-terrazas": "cerramientos-de-terrazas",
-  "shower-doors-y-mamparas": "shower-doors",
-  "ventanas-de-aluminio": "ventanas-de-aluminio",
-  "ventanas-de-pvc": "ventanas-de-pvc",
-  "puertas-de-aluminio-y-vidrio": "puertas-de-aluminio-y-vidrio",
-  "espejos-a-medida": "espejos-a-medida",
-  "barandas-de-vidrio": "barandas-de-vidrio",
-  "divisiones-y-trabajos-especiales": "trabajos-especiales",
+export const legacyRedirects: Record<string, string> = {
+  "/servicios/cerramientos-de-terrazas/": "/cerramientos-de-terrazas/",
+  "/servicios/shower-doors-y-mamparas/": "/shower-doors/",
+  "/servicios/ventanas-de-aluminio/": "/ventanas-de-aluminio/",
+  "/servicios/ventanas-de-pvc/": "/ventanas-de-pvc/",
+  "/servicios/puertas-de-aluminio-y-vidrio/": "/puertas-de-aluminio-y-pvc/",
+  "/servicios/divisiones-y-trabajos-especiales/": "/mamparas-de-vidrio/",
+  "/servicios/espejos-a-medida/": "/",
+  "/servicios/barandas-de-vidrio/": "/",
+  "/puertas-de-aluminio-y-vidrio/": "/puertas-de-aluminio-y-pvc/",
+  "/trabajos-especiales/": "/mamparas-de-vidrio/",
+  "/espejos-a-medida/": "/",
+  "/barandas-de-vidrio/": "/",
 };

@@ -7,3 +7,6 @@ export const navItems = [
   { href: "/preguntas-frecuentes/", label: "Preguntas" },
   { href: "/contacto/", label: "Contacto" },
 ];
+
+/** Enlaces secundarios (solo pie de página). */
+export const footerExtraItems = [{ href: "/proyectos-comerciales/", label: "Proyectos comerciales y edificios" }];

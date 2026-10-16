@@ -4,7 +4,7 @@ import { images, type SiteImage } from "./images";
  * GALERÍA DE PROYECTOS
  *
  * IMPORTANTE: mientras `image.demo` sea true, la foto es una imagen de
- * referencia de terceros (Unsplash) y NO un trabajo de CRISTALTE. La web la
+ * referencia de terceros (Unsplash) y NO un trabajo de CRISTALTEC. La web la
  * marca como "Imagen referencial" y los textos están escritos como ejemplos
  * de lo que se puede hacer, no como trabajos realizados.
  *
@@ -32,15 +32,7 @@ import { images, type SiteImage } from "./images";
  * su autorización. No escribas testimonios que el cliente no haya dado.
  */
 
-export const projectCategories = [
-  "Terrazas",
-  "Shower doors",
-  "Ventanas",
-  "Puertas",
-  "Espejos",
-  "Barandas",
-  "PVC",
-] as const;
+export const projectCategories = ["Ventanas", "PVC", "Puertas", "Shower doors", "Terrazas", "Mamparas", "Vitrinas"] as const;
 
 export type ProjectCategory = (typeof projectCategories)[number];
 
@@ -67,13 +59,13 @@ export type Project = {
 
 /** Servicio al que pertenece cada categoría de la galería. */
 export const categoryService: Record<ProjectCategory, string> = {
-  Terrazas: "cerramientos-de-terrazas",
-  "Shower doors": "shower-doors",
   Ventanas: "ventanas-de-aluminio",
-  Puertas: "puertas-de-aluminio-y-vidrio",
-  Espejos: "espejos-a-medida",
-  Barandas: "barandas-de-vidrio",
   PVC: "ventanas-de-pvc",
+  Puertas: "puertas-de-aluminio-y-pvc",
+  "Shower doors": "shower-doors",
+  Terrazas: "cerramientos-de-terrazas",
+  Mamparas: "mamparas-de-vidrio",
+  Vitrinas: "vitrinas-a-medida",
 };
 
 export const projects: Project[] = [
@@ -100,28 +92,28 @@ export const projects: Project[] = [
   },
   {
     id: "shower-marmol",
-    title: "Shower door en baño de mármol",
+    title: "Shower door de vidrio templado",
     category: "Shower doors",
     description: "Referencia de un shower door de vidrio con herrajes minimalistas.",
     image: images.showerMarmol,
   },
   {
-    id: "mampara-ducha",
-    title: "Mampara de ducha transparente",
+    id: "shower-transparente",
+    title: "Shower door transparente",
     category: "Shower doors",
-    description: "Referencia de una mampara de vidrio transparente para un baño luminoso.",
+    description: "Referencia de un cierre de ducha de vidrio transparente para un baño luminoso.",
     image: images.showerBano,
   },
   {
     id: "shower-azulejo",
-    title: "Puerta de ducha en baño con azulejos",
+    title: "Puerta de ducha abatible",
     category: "Shower doors",
     description: "Referencia de una puerta de ducha abatible de vidrio.",
     image: images.showerAzulejo,
   },
   {
     id: "ventanas-dormitorio",
-    title: "Ventanas para dormitorio",
+    title: "Ventanas de aluminio para dormitorio",
     category: "Ventanas",
     description: "Referencia de ventanas amplias para aprovechar la luz natural.",
     image: images.ventanasDormitorio,
@@ -134,55 +126,6 @@ export const projects: Project[] = [
     image: images.ventanalCorredera,
   },
   {
-    id: "puerta-comercial",
-    title: "Acceso comercial en vidrio",
-    category: "Puertas",
-    description: "Referencia de puertas de vidrio con perfiles oscuros para un local comercial.",
-    image: images.puertaComercial,
-  },
-  {
-    id: "puerta-terraza",
-    title: "Puerta de vidrio hacia terraza",
-    category: "Puertas",
-    description: "Referencia de una puerta de vidrio con marco negro.",
-    image: images.puertaTerraza,
-  },
-  {
-    id: "espejo-gran-formato",
-    title: "Espejo de gran formato",
-    category: "Espejos",
-    description: "Referencia de un espejo de gran formato que amplía visualmente el ambiente.",
-    image: images.espejoGrande,
-  },
-  {
-    id: "espejo-comercio",
-    title: "Espejo para local comercial",
-    category: "Espejos",
-    description: "Referencia de un espejo instalado sobre muro en un comercio.",
-    image: images.espejoMuro,
-  },
-  {
-    id: "baranda-escalera",
-    title: "Baranda de vidrio para escalera",
-    category: "Barandas",
-    description: "Referencia de una baranda de vidrio que acompaña el recorrido de la escalera.",
-    image: images.barandaEscalera,
-  },
-  {
-    id: "baranda-ventanal",
-    title: "Barandas de vidrio en escalera abierta",
-    category: "Barandas",
-    description: "Referencia de barandas de vidrio junto a grandes ventanales.",
-    image: images.barandaVentanal,
-  },
-  {
-    id: "baranda-marmol",
-    title: "Baranda de vidrio y muro de mármol",
-    category: "Barandas",
-    description: "Referencia de una baranda de vidrio en una escalera interior.",
-    image: images.barandaMarmol,
-  },
-  {
     id: "ventana-pvc",
     title: "Ventana de PVC oscilobatiente",
     category: "PVC",
@@ -190,10 +133,45 @@ export const projects: Project[] = [
     image: images.ventanaPvc,
   },
   {
+    id: "puerta-comercial",
+    title: "Puerta de aluminio y vidrio para local",
+    category: "Puertas",
+    description: "Referencia de puertas de aluminio y vidrio con perfiles oscuros para un local comercial.",
+    image: images.puertaComercial,
+  },
+  {
     id: "puerta-pvc-cocina",
     title: "Puerta corredera de PVC",
-    category: "PVC",
+    category: "Puertas",
     description: "Referencia de una puerta corredera con marco de PVC en una cocina.",
     image: images.puertaPvcCocina,
+  },
+  {
+    id: "mampara-terraza",
+    title: "Mampara de vidrio hacia terraza",
+    category: "Mamparas",
+    description: "Referencia de una mampara de vidrio con marco negro que conecta el interior con la terraza.",
+    image: images.puertaTerraza,
+  },
+  {
+    id: "mampara-oficina",
+    title: "Mampara divisoria de oficina",
+    category: "Mamparas",
+    description: "Referencia de una mampara de vidrio que separa una oficina sin quitarle luz.",
+    image: images.divisionOficina,
+  },
+  {
+    id: "mamparas-pasillo",
+    title: "Mamparas en pasillo de oficinas",
+    category: "Mamparas",
+    description: "Referencia de muros divisorios de vidrio a lo largo de un pasillo.",
+    image: images.pasilloVidrio,
+  },
+  {
+    id: "vitrina-exhibicion",
+    title: "Vitrina de exhibición con puertas de vidrio",
+    category: "Vitrinas",
+    description: "Referencia de una vitrina con repisas para exhibir objetos.",
+    image: images.vitrinaExhibicion,
   },
 ];

@@ -22,7 +22,7 @@ test.describe("generación de enlaces de WhatsApp", () => {
     expect(url.startsWith("https://wa.me/56900000000?text=")).toBe(true);
     const text = new URL(url).searchParams.get("text");
     expect(text).toBe(
-      "Hola, vengo desde la página web de CRISTALTE y quisiera solicitar una cotización. Me interesa conocer las opciones disponibles para mi proyecto.",
+      "Hola, vengo desde la página web de CRISTALTEC y quisiera solicitar una cotización. Me interesa conocer las opciones disponibles para mi proyecto.",
     );
   });
 
@@ -40,8 +40,8 @@ test.describe("generación de enlaces de WhatsApp", () => {
       name: "María Ñúñez & Cía",
       phone: "+56 9 0000 0000",
       commune: "Ñuñoa",
-      service: "Barandas de vidrio",
-      description: "Baranda de 5 m #2, ¿es posible? 100% vidrio",
+      service: "Mamparas de vidrio",
+      description: "Mampara de 5 m #2, ¿es posible? 100% vidrio",
       budget: "Prefiero conversarlo",
     };
     const text = new URL(buildWhatsAppUrl(whatsappMessages.quoteForm(data))!).searchParams.get("text")!;
@@ -56,8 +56,8 @@ test.describe("generación de enlaces de WhatsApp", () => {
         name: "Ana",
         phone: "+56 9 0000 0000",
         commune: "Santiago",
-        service: "Espejos a medida",
-        description: "Espejo de 1,2 x 0,8 m para baño",
+        service: "Vitrinas a medida",
+        description: "Vitrina de 1,2 x 0,8 m para local",
       }),
     ).toEqual({});
   });

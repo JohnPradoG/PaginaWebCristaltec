@@ -6,7 +6,7 @@ import { breadcrumbJsonLd, jsonLdScript, pageMetadata } from "@/lib/seo";
 export const metadata = pageMetadata({
   title: "Contacto y cotización",
   description:
-    "Cotiza ventanas, cerramientos de terrazas, shower doors, puertas, espejos o barandas de vidrio con CRISTALTE. Escríbenos por WhatsApp o completa el formulario.",
+    "Cotiza ventanas, puertas, shower doors, cerramientos de terrazas, mamparas, vitrinas o reparaciones con CRISTALTEC. Escríbenos por WhatsApp o completa el formulario.",
   path: "/contacto/",
 });
 

@@ -35,7 +35,7 @@ export function ContactSection() {
           {map && (
             <iframe
               src={map}
-              title="Ubicación de CRISTALTE en Google Maps"
+              title="Ubicación de CRISTALTEC en Google Maps"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
               className="mt-6 aspect-[4/3] w-full rounded-xl border-0"

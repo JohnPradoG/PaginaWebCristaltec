@@ -43,42 +43,82 @@
     },
     {
       "source": "/servicios/puertas-de-aluminio-y-vidrio",
-      "destination": "/puertas-de-aluminio-y-vidrio/",
+      "destination": "/puertas-de-aluminio-y-pvc/",
       "permanent": true
     },
     {
       "source": "/servicios/puertas-de-aluminio-y-vidrio/",
-      "destination": "/puertas-de-aluminio-y-vidrio/",
-      "permanent": true
-    },
-    {
-      "source": "/servicios/espejos-a-medida",
-      "destination": "/espejos-a-medida/",
-      "permanent": true
-    },
-    {
-      "source": "/servicios/espejos-a-medida/",
-      "destination": "/espejos-a-medida/",
-      "permanent": true
-    },
-    {
-      "source": "/servicios/barandas-de-vidrio",
-      "destination": "/barandas-de-vidrio/",
-      "permanent": true
-    },
-    {
-      "source": "/servicios/barandas-de-vidrio/",
-      "destination": "/barandas-de-vidrio/",
+      "destination": "/puertas-de-aluminio-y-pvc/",
       "permanent": true
     },
     {
       "source": "/servicios/divisiones-y-trabajos-especiales",
-      "destination": "/trabajos-especiales/",
+      "destination": "/mamparas-de-vidrio/",
       "permanent": true
     },
     {
       "source": "/servicios/divisiones-y-trabajos-especiales/",
-      "destination": "/trabajos-especiales/",
+      "destination": "/mamparas-de-vidrio/",
+      "permanent": true
+    },
+    {
+      "source": "/servicios/espejos-a-medida",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/servicios/espejos-a-medida/",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/servicios/barandas-de-vidrio",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/servicios/barandas-de-vidrio/",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/puertas-de-aluminio-y-vidrio",
+      "destination": "/puertas-de-aluminio-y-pvc/",
+      "permanent": true
+    },
+    {
+      "source": "/puertas-de-aluminio-y-vidrio/",
+      "destination": "/puertas-de-aluminio-y-pvc/",
+      "permanent": true
+    },
+    {
+      "source": "/trabajos-especiales",
+      "destination": "/mamparas-de-vidrio/",
+      "permanent": true
+    },
+    {
+      "source": "/trabajos-especiales/",
+      "destination": "/mamparas-de-vidrio/",
+      "permanent": true
+    },
+    {
+      "source": "/espejos-a-medida",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/espejos-a-medida/",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/barandas-de-vidrio",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/barandas-de-vidrio/",
+      "destination": "/",
       "permanent": true
     },
     {

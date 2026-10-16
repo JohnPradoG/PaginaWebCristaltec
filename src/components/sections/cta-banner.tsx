@@ -21,7 +21,7 @@ export function CtaBanner() {
             ¿Tienes un proyecto en mente?
           </h2>
           <p className="mt-5 text-lg leading-relaxed text-white/90">
-            Cuéntanos qué necesitas. En CRISTALTE podemos ayudarte a encontrar una solución en aluminio, vidrio o PVC
+            Cuéntanos qué necesitas. En CRISTALTEC podemos ayudarte a encontrar una solución en aluminio, vidrio o PVC
             adaptada a tu espacio.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">

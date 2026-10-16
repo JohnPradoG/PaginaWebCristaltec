@@ -6,7 +6,7 @@ import { breadcrumbJsonLd, jsonLdScript, pageMetadata } from "@/lib/seo";
 export const metadata = pageMetadata({
   title: "Nosotros",
   description:
-    "Conoce CRISTALTE: soluciones a medida en aluminio, vidrio y PVC para hogares, comercios y proyectos de construcción.",
+    "Conoce CRISTALTEC: soluciones a medida en aluminio, vidrio y PVC para hogares, comercios y proyectos de construcción.",
   path: "/nosotros/",
 });
 

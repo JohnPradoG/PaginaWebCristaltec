@@ -45,12 +45,12 @@ export function SiteHeader() {
           Saltar al contenido
         </a>
         <Container className="flex h-[72px] items-center justify-between gap-4">
-          <Link href="/" className="shrink-0" aria-label="CRISTALTE, ir al inicio" onClick={() => setOpen(false)}>
+          <Link href="/" className="shrink-0" aria-label="CRISTALTEC, ir al inicio" onClick={() => setOpen(false)}>
             {/* eslint-disable-next-line @next/next/no-img-element -- SVG vectorial liviano */}
             <img
-              src="/brand/cristalte-logo-horizontal-light.svg"
-              alt="CRISTALTE"
-              width={260}
+              src="/brand/cristaltec-logo-horizontal-light.svg"
+              alt="CRISTALTEC"
+              width={290}
               height={64}
               className="h-11 w-auto sm:h-12"
             />

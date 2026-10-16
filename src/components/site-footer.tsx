@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
 import { servicePath, services } from "@/content/services";
-import { navItems } from "@/content/navigation";
+import { footerExtraItems, navItems } from "@/content/navigation";
 import { ContactList, SocialLinks } from "./contact-details";
 import { Container } from "./ui";
 
@@ -13,9 +13,9 @@ export function SiteFooter() {
         <div>
           {/* eslint-disable-next-line @next/next/no-img-element -- SVG vectorial liviano */}
           <img
-            src="/brand/cristalte-logo-horizontal-dark.svg"
-            alt="CRISTALTE"
-            width={260}
+            src="/brand/cristaltec-logo-horizontal-dark.svg"
+            alt="CRISTALTEC"
+            width={290}
             height={64}
             className="h-12 w-auto"
           />
@@ -26,7 +26,7 @@ export function SiteFooter() {
         <nav aria-label="Secciones">
           <h2 className="text-sm font-bold uppercase tracking-[0.14em] text-brand-light">Navegación</h2>
           <ul className="mt-4 space-y-2">
-            {navItems.map((item) => (
+            {[...navItems, ...footerExtraItems].map((item) => (
               <li key={item.href}>
                 <Link href={item.href} className="text-white/85 hover:text-white hover:underline">
                   {item.label}

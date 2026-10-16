@@ -6,7 +6,8 @@ import { seoLocation, siteConfig } from "@/config/site";
 import { getService, servicePath, services } from "@/content/services";
 import { projects } from "@/content/projects";
 import { absoluteUrl, breadcrumbJsonLd, faqJsonLd, jsonLdScript, pageMetadata } from "@/lib/seo";
-import { whatsappMessages } from "@/lib/whatsapp";
+import { priceList } from "@/content/prices";
+import { PriceSection } from "@/components/sections/prices";
 import { WhatsAppLink } from "@/components/whatsapp-link";
 import { ServiceCard } from "@/components/service-card";
 import { Breadcrumbs } from "@/components/breadcrumbs";
@@ -41,7 +42,8 @@ export default async function ServicePage(props: PageProps<"/[servicio]">) {
   const related = service.galleryCategory ? projects.filter((p) => p.category === service.galleryCategory).slice(0, 3) : [];
   const relatedServices = service.related.map(getService).filter((s) => s !== undefined);
   const areas = siteConfig.contact.serviceAreas;
-  const whatsappMessage = whatsappMessages.service(service.name);
+  const whatsappMessage = service.whatsappMessage;
+  const prices = priceList.filter((p) => p.service === service.slug);
 
   const jsonLd = [
     {
@@ -122,7 +124,7 @@ export default async function ServicePage(props: PageProps<"/[servicio]">) {
       <section aria-label="Usos, materiales y opciones" className="pb-16 sm:pb-20">
         <Container className="grid gap-8 lg:grid-cols-[1fr_1.4fr]">
           <div className="rounded-2xl bg-navy p-6 text-white sm:p-8">
-            <h2 className="text-2xl font-extrabold">Dónde se usan</h2>
+            <h2 className="text-2xl font-extrabold">{service.applicationsTitle ?? "Dónde se usan"}</h2>
             <ul className="mt-6 space-y-3">
               {service.applications.map((a) => (
                 <li key={a} className="flex gap-3">
@@ -152,7 +154,7 @@ export default async function ServicePage(props: PageProps<"/[servicio]">) {
             </WhatsAppLink>
           </div>
           <div>
-            <h2 className="text-2xl font-extrabold text-navy sm:text-3xl">Materiales y opciones</h2>
+            <h2 className="text-2xl font-extrabold text-navy sm:text-3xl">{service.optionsTitle ?? "Materiales y opciones"}</h2>
             <dl className="mt-6 divide-y divide-navy/10 rounded-2xl border border-navy/10">
               {service.options.map((o) => (
                 <div key={o.title} className="p-5 sm:p-6">
@@ -174,6 +176,51 @@ export default async function ServicePage(props: PageProps<"/[servicio]">) {
           </div>
         </Container>
       </section>
+
+      {service.comparison && (
+        <section aria-labelledby="comparacion-title" className="pb-16 sm:pb-20">
+          <Container>
+            <h2 id="comparacion-title" className="text-2xl font-extrabold text-navy sm:text-3xl">
+              {service.comparison.title}
+            </h2>
+            <p className="mt-3 max-w-3xl text-lg leading-relaxed text-ink-muted">{service.comparison.intro}</p>
+            <div className="mt-8 overflow-x-auto rounded-2xl border border-navy/10">
+              <table className="w-full border-collapse text-left max-sm:text-[15px]">
+                <caption className="sr-only">{service.comparison.title}</caption>
+                <thead className="bg-navy text-white">
+                  <tr className="max-sm:grid max-sm:grid-cols-2">
+                    <th scope="col" className="w-1/4 p-4 font-bold max-sm:hidden">
+                      <span className="sr-only">Característica</span>
+                    </th>
+                    {service.comparison.options.map((o) => (
+                      <th key={o} scope="col" className="p-4 font-extrabold max-sm:p-3">
+                        {o}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-navy/10">
+                  {service.comparison.rows.map((row) => (
+                    <tr key={row.label} className="align-top even:bg-mist max-sm:grid max-sm:grid-cols-2">
+                      <th scope="row" className="p-4 font-bold text-navy max-sm:col-span-2 max-sm:px-3 max-sm:pb-0">
+                        {row.label}
+                      </th>
+                      {row.values.map((v, i) => (
+                        <td key={i} className="p-4 leading-relaxed text-ink-muted max-sm:px-3 max-sm:pt-1">
+                          {v}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {service.comparison.note && <p className="mt-4 text-ink-muted">{service.comparison.note}</p>}
+          </Container>
+        </section>
+      )}
+
+      <PriceSection items={prices} />
 
       {related.length > 0 && (
         <section aria-labelledby="relacionados-title" className="pb-16 sm:pb-20">
@@ -232,6 +279,17 @@ export default async function ServicePage(props: PageProps<"/[servicio]">) {
 
       <QuoteFormSection defaultService={service.name} title={`Cotiza ${lc(service.name)}`} />
 
+      <Container className="pb-16 sm:pb-20">
+        <p className="rounded-2xl border border-navy/10 bg-mist p-5 text-ink sm:p-6">
+          <strong className="text-navy">¿Proyecto grande o comercial?</strong> Edificios, oficinas, locales u obras con
+          varias unidades:{" "}
+          <Link href="/proyectos-comerciales/" className="font-bold text-brand-dark underline">
+            usa el formulario de proyectos comerciales
+          </Link>
+          .
+        </p>
+      </Container>
+
       <section aria-labelledby="otros-title" className="bg-mist py-16 sm:py-20">
         <Container>
           <h2 id="otros-title" className="text-2xl font-extrabold text-navy sm:text-3xl">
@@ -250,5 +308,6 @@ export default async function ServicePage(props: PageProps<"/[servicio]">) {
 
 /** Primera letra en minúscula, respetando siglas como PVC. */
 function lc(text: string) {
+  if (/^[A-ZÁÉÍÓÚÑ]{2}/.test(text)) return text;
   return text.charAt(0).toLowerCase() + text.slice(1);
 }

@@ -31,7 +31,7 @@ export function AboutSection({ headingLevel = "h2" }: { headingLevel?: "h1" | "h
           />
           <div className="mt-6 space-y-4 text-lg leading-relaxed text-ink-muted">
             <p>
-              En CRISTALTE desarrollamos soluciones en aluminio, vidrio y PVC para hogares, comercios y proyectos de
+              En CRISTALTEC desarrollamos soluciones en aluminio, vidrio y PVC para hogares, comercios y proyectos de
               construcción. Cada trabajo parte por entender el espacio y lo que el cliente necesita.
             </p>
             <p>

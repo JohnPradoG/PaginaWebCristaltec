@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
   title: {
     default: defaultTitle,
-    template: "%s | CRISTALTE",
+    template: "%s | CRISTALTEC",
   },
   description: defaultDescription,
   applicationName: siteConfig.name,
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     siteName: siteConfig.name,
     title: defaultTitle,
     description: defaultDescription,
-    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "CRISTALTE: aluminio, vidrio y diseño" }],
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "CRISTALTEC: aluminio, vidrio y diseño" }],
   },
   twitter: {
     card: "summary_large_image",

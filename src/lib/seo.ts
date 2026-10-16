@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import { getSiteUrl, isWhatsAppConfigured, siteConfig } from "@/config/site";
 import type { FaqItem } from "@/content/faq-types";
 
-export const defaultTitle = "Ventanas, cerramientos y vidrio a medida | CRISTALTE";
+export const defaultTitle = "Ventanas, cerramientos y vidrio a medida | CRISTALTEC";
 
 export const defaultDescription =
-  "CRISTALTE: ventanas de aluminio y PVC, cerramientos de terrazas, shower doors, puertas, espejos y barandas de vidrio a medida. Cotiza por WhatsApp o con el formulario.";
+  "CRISTALTEC: ventanas de aluminio y PVC con vidrio monolítico o termopanel, puertas, shower doors, cerramientos de terrazas, mamparas, vitrinas a medida y reparación. Cotiza por WhatsApp.";
 
 export function absoluteUrl(path = "/") {
   return `${getSiteUrl()}${path.startsWith("/") ? path : `/${path}`}`;
@@ -24,7 +24,7 @@ export function pageMetadata({
   title: string;
   description: string;
   path: string;
-  /** true = el título se usa tal cual, sin agregar " | CRISTALTE". */
+  /** true = el título se usa tal cual, sin agregar " | CRISTALTEC". */
   absoluteTitle?: boolean;
 }): Metadata {
   const fullTitle = absoluteTitle ? title : `${title} | ${siteConfig.name}`;
@@ -39,7 +39,7 @@ export function pageMetadata({
       type: "website",
       locale: "es_CL",
       siteName: siteConfig.name,
-      images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "CRISTALTE: aluminio, vidrio y diseño" }],
+      images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "CRISTALTEC: aluminio, vidrio y diseño" }],
     },
     twitter: { card: "summary_large_image", title: fullTitle, description, images: ["/og-image.png"] },
   };
@@ -65,7 +65,7 @@ export function businessJsonLd() {
     name: siteConfig.name,
     description: defaultDescription,
     url: absoluteUrl("/"),
-    logo: absoluteUrl("/brand/cristalte-icono-512.png"),
+    logo: absoluteUrl("/brand/cristaltec-icono-512.png"),
     image: absoluteUrl("/og-image.png"),
     slogan: siteConfig.slogan,
   };

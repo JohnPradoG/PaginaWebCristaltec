@@ -5,7 +5,7 @@ import { breadcrumbJsonLd, jsonLdScript, pageMetadata } from "@/lib/seo";
 export const metadata = pageMetadata({
   title: "Proyectos de aluminio, vidrio y PVC",
   description:
-    "Ideas y proyectos de cerramientos de terrazas, ventanas, shower doors, puertas, espejos y barandas de vidrio. Consulta por un trabajo similar con CRISTALTE.",
+    "Ideas y proyectos de ventanas, puertas, shower doors, cerramientos de terrazas, mamparas y vitrinas a medida. Consulta por un trabajo similar con CRISTALTEC.",
   path: "/proyectos/",
 });
 

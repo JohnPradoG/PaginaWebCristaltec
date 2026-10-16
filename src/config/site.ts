@@ -1,6 +1,6 @@
 /**
  * ============================================================================
- *  DATOS COMERCIALES DE CRISTALTE — ÚNICO ARCHIVO PARA EDITAR
+ *  DATOS COMERCIALES DE CRISTALTEC — ÚNICO ARCHIVO PARA EDITAR
  * ============================================================================
  *
  * Todos los datos de contacto y del negocio se configuran aquí. El resto del
@@ -15,7 +15,7 @@
 
 export const siteConfig = {
   /** Nombre comercial. */
-  name: "CRISTALTE",
+  name: "CRISTALTEC",
 
   /** Razón social, solo si quieres mostrarla en el pie de página. */
   legalName: null as string | null,
@@ -94,9 +94,20 @@ export const siteConfig = {
     bingSiteVerification: null as string | null,
   },
 
+  forms: {
+    /**
+     * Destino del formulario de proyectos comerciales, además de WhatsApp.
+     * URL de un servicio que reciba formularios y los envíe a tu correo, por
+     * ejemplo Formspree ("https://formspree.io/f/xxxxxxx"). Debe aceptar POST
+     * con JSON. Mientras esté en null, el formulario abre WhatsApp; si tampoco
+     * hay número, avisa que todavía no se puede enviar (nunca simula un envío).
+     */
+    commercialEndpoint: null as string | null,
+  },
+
   /** Mensaje de WhatsApp general. */
   whatsappGeneralMessage:
-    "Hola, vengo desde la página web de CRISTALTE y quisiera solicitar una cotización. Me interesa conocer las opciones disponibles para mi proyecto.",
+    "Hola, vengo desde la página web de CRISTALTEC y quisiera solicitar una cotización. Me interesa conocer las opciones disponibles para mi proyecto.",
 };
 
 export type SiteConfig = typeof siteConfig;

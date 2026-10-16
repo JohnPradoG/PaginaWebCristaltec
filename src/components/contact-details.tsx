@@ -134,7 +134,7 @@ export function SocialLinks({ className = "" }: { className?: string }) {
             href={href}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={`${label} de CRISTALTE`}
+            aria-label={`${label} de CRISTALTEC`}
             className="inline-flex size-11 items-center justify-center rounded-full border border-white/25 text-white hover:bg-white hover:text-navy"
           >
             <Icon className="size-5" />

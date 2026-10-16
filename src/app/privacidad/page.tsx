@@ -4,7 +4,7 @@ import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
   title: "Aviso de privacidad",
-  description: "Cómo CRISTALTE trata los datos que compartes al solicitar una cotización.",
+  description: "Cómo CRISTALTEC trata los datos que compartes al solicitar una cotización.",
   path: "/privacidad/",
 });
 

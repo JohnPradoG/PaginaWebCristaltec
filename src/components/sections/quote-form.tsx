@@ -263,7 +263,7 @@ export function QuoteFormSection({ defaultService = "", title = "Solicita tu cot
             )}
             {status === "pending-number" && (
               <p className="rounded-lg border border-red-300 bg-white p-4 text-red-800">
-                El número de WhatsApp de CRISTALTE aún no está configurado, por lo que no es posible enviar la
+                El número de WhatsApp de CRISTALTEC aún no está configurado, por lo que no es posible enviar la
                 solicitud por ahora.
               </p>
             )}

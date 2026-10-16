@@ -33,6 +33,16 @@ export const faqs: FaqItem[] = [
       "Sí, trabajamos soluciones en aluminio, vidrio y PVC. Te ayudamos a comparar alternativas según el uso del espacio y tu presupuesto.",
   },
   {
+    question: "¿Qué diferencia hay entre vidrio monolítico y termopanel?",
+    answer:
+      "El vidrio monolítico es una sola lámina; es la opción más simple y económica. El termopanel une dos vidrios con una cámara de aire entre ellos, lo que aísla mejor del frío, del calor y del ruido y reduce la condensación. Ambos se pueden usar en ventanas de aluminio y de PVC.",
+  },
+  {
+    question: "¿Hacen reparaciones y mantenimiento?",
+    answer:
+      "Sí. Reparamos y mantenemos ventanas, puertas, mamparas, shower doors y sistemas de aluminio, PVC y vidrio: ruedas, cierres, burletes, sellos y cambio de vidrios, entre otros. Envíanos una foto del problema para orientarte.",
+  },
+  {
     question: "¿Puedo enviar fotografías del espacio?",
     answer:
       "Sí, y nos ayuda mucho. Puedes enviarlas directamente por WhatsApp junto con tu consulta.",

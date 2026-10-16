@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { servicePath, type Service } from "@/content/services";
-import { whatsappMessages } from "@/lib/whatsapp";
 import { WhatsAppLink } from "./whatsapp-link";
 import { ArrowRightIcon, WhatsAppIcon } from "./icons";
 import { btn, DemoBadge } from "./ui";
@@ -31,7 +30,7 @@ export function ServiceCard({ service, headingLevel = "h3" }: { service: Service
         <p className="mt-2 flex-1 leading-relaxed text-ink-muted">{service.summary}</p>
         <div className="mt-5 flex flex-col gap-2">
           <WhatsAppLink
-            message={whatsappMessages.service(service.name)}
+            message={service.whatsappMessage}
             trackLabel={`tarjeta:${service.slug}`}
             className={btn("whatsapp", "w-full px-3 text-sm whitespace-nowrap")}
             ariaLabel={`Consultar por WhatsApp sobre ${service.name}`}

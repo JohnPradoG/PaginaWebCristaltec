@@ -1,6 +1,6 @@
-# CRISTALTE · Sitio web
+# CRISTALTEC · Sitio web
 
-Sitio web comercial de **CRISTALTE**, soluciones en aluminio, vidrio y PVC. Está pensado para que el visitante entienda rápido los servicios, vea ejemplos y pida una cotización por WhatsApp o con un formulario.
+Sitio web comercial de **CRISTALTEC**, soluciones en aluminio, vidrio y PVC. Está pensado para que el visitante entienda rápido los servicios, vea ejemplos y pida una cotización por WhatsApp o con un formulario.
 
 - **Tecnología:** Next.js 16 (exportación estática) + TypeScript + Tailwind CSS 4.
 - **Resultado:** un sitio estático (carpeta `out/`) que se publica en Vercel, Netlify, Cloudflare Pages o cualquier hosting con cPanel. No necesita base de datos ni servidor.
@@ -26,6 +26,7 @@ El sitio funciona sin estos datos, pero **no se debe publicar en producción** h
 | Instagram, Facebook, TikTok | `social.*` | No |
 | Razón social y RUT (pie de página) | `legalName`, `rut` | No |
 | Google Search Console, Bing y Google Analytics | `analytics.*` | Muy recomendado |
+| Destino del formulario de proyectos comerciales (URL de Formspree u otro servicio que reciba POST JSON) | `forms.commercialEndpoint` | Recomendado |
 | **Fotografías reales de trabajos** | `src/content/images.ts` | Muy recomendado |
 | Historia real de la empresa | `ownerStory` en `src/components/sections/about.tsx` | No |
 
@@ -89,6 +90,7 @@ Los mensajes prearmados de WhatsApp están en `src/lib/whatsapp.ts` (general, po
 | Qué | Archivo |
 |---|---|
 | Servicios (tarjetas y páginas `/ventanas-de-aluminio/`, etc.) | `src/content/services.ts` |
+| Precios referenciales (portada y páginas de servicio) | `src/content/prices.ts` |
 | Galería de proyectos | `src/content/projects.ts` |
 | Preguntas frecuentes | `src/content/faq.ts` |
 | Portada | `src/components/sections/hero.tsx` |
@@ -97,7 +99,7 @@ Los mensajes prearmados de WhatsApp están en `src/lib/whatsapp.ts` (general, po
 | Aviso de privacidad | `src/app/privacidad/page.tsx` |
 
 ### Fotografías
-Las fotos actuales son **imágenes de referencia de Unsplash** (licencia libre), marcadas en la web como “Imagen referencial” y listadas en `/creditos-imagenes/`. **No son trabajos de CRISTALTE.**
+Las fotos actuales son **imágenes de referencia de Unsplash** (licencia libre), marcadas en la web como “Imagen referencial” y listadas en `/creditos-imagenes/`. **No son trabajos de CRISTALTEC.**
 
 Para usar fotos reales:
 
@@ -113,10 +115,10 @@ Los archivos de marca están en `public/brand/`:
 
 | Archivo | Uso |
 |---|---|
-| `cristalte-logo-horizontal-light.svg` | Logo horizontal para fondos claros |
-| `cristalte-logo-horizontal-dark.svg` | Logo horizontal para fondos oscuros |
-| `cristalte-isotipo-light.svg` / `-dark.svg` | Símbolo solo |
-| `cristalte-icono-app.svg` / `cristalte-icono-512.png` | Ícono para favicon y redes sociales |
+| `cristaltec-logo-horizontal-light.svg` | Logo horizontal para fondos claros |
+| `cristaltec-logo-horizontal-dark.svg` | Logo horizontal para fondos oscuros |
+| `cristaltec-isotipo-light.svg` / `-dark.svg` | Símbolo solo |
+| `cristaltec-icono-app.svg` / `cristaltec-icono-512.png` | Ícono para favicon y redes sociales |
 | `*.png` | Versiones en imagen para documentos |
 
 Los SVG son vectoriales (el texto está convertido a trazos). Se generan con `npm run brand` desde `scripts/generate-brand.mjs`, que también crea el favicon, el ícono de Apple y la imagen para compartir (`public/og-image.png`).
@@ -136,7 +138,7 @@ Los SVG son vectoriales (el texto está convertido a trazos). Se generan con `np
 2. La configuración ya está en `netlify.toml` (comando `npm run build`, carpeta `out`).
 
 ### Opción: hosting con cPanel
-1. En tu computador ejecuta `CRISTALTE_PUBLICAR=1 npm run build` (este modo falla si faltan datos obligatorios).
+1. En tu computador ejecuta `CRISTALTEC_PUBLICAR=1 npm run build` (este modo falla si faltan datos obligatorios).
 2. Sube **el contenido** de la carpeta `out/` a `public_html` con el administrador de archivos o FTP.
 
 ### Protección de Vercel (importante)
@@ -168,7 +170,7 @@ Crea una propiedad y pega el ID `G-XXXXXXXXXX` en `analytics.googleAnalyticsId`.
 En GA4 marca `generate_lead` y `whatsapp_click` como **eventos clave** para verlos como conversiones.
 
 ### URLs anteriores
-Las páginas de servicio pasaron de `/servicios/<nombre>/` a `/<nombre>/`. `vercel.json` redirige las URLs anteriores con 301. Si cambias un `slug`, agrega la redirección correspondiente.
+Las páginas de servicio pasaron de `/servicios/<nombre>/` a `/<nombre>/`, y los servicios retirados (espejos, barandas, divisiones) redirigen al servicio más cercano o a la portada. Las reglas están en `legacyRedirects` (`src/content/services.ts`) y se copian a `vercel.json` como redirecciones 301; una prueba automática verifica que coincidan.
 
 ---
 
@@ -176,8 +178,10 @@ Las páginas de servicio pasaron de `/servicios/<nombre>/` a `/<nombre>/`. `verc
 
 - Encabezado fijo con menú móvil y botón “Cotizar por WhatsApp”.
 - Portada con fotografía, mensaje principal y dos llamados a la acción.
-- 8 servicios con tarjeta, botón de WhatsApp con mensaje propio y página individual con URL descriptiva (`/cerramientos-de-terrazas/`, etc.): beneficios, usos, materiales y opciones, preguntas frecuentes, ideas de la galería, formulario con el servicio ya elegido y servicios relacionados.
+- 8 servicios: ventanas de aluminio y de PVC (con explicación de vidrio monolítico y termopanel), puertas de aluminio y PVC, shower doors (vidrio templado o acrílico), cerramientos de terrazas, mamparas de vidrio, vitrinas a medida y reparación y mantenimiento. Cada uno con tarjeta, botón de WhatsApp con mensaje propio y página individual con URL descriptiva (`/cerramientos-de-terrazas/`, etc.): beneficios, usos, materiales y opciones, preguntas frecuentes, ideas de la galería, formulario con el servicio ya elegido y servicios relacionados.
 - Páginas de proyectos, nosotros, contacto y preguntas frecuentes.
+- Sección “Precios referenciales” (valores entregados por la empresa; en cada servicio se muestran solo sus filas) con botón al formulario.
+- Página `/proyectos-comerciales/` con formulario para edificios, oficinas y obras. Si `forms.commercialEndpoint` tiene una URL, envía la solicitud y solo confirma cuando el servidor responde bien; si no, abre WhatsApp; si tampoco hay WhatsApp, avisa que la solicitud no se envió.
 - “Detalles que marcan la diferencia” solo con beneficios que la empresa puede respaldar.
 - Galería filtrable por categoría (sin recargar) con vista ampliada, navegación con teclado y botón “Consultar un proyecto similar”.
 - Sección “¿Tienes un proyecto en mente?”.
@@ -195,7 +199,7 @@ Un enlace de WhatsApp no permite adjuntar archivos, por eso el formulario indica
 
 ## 6. Pruebas realizadas
 
-- `npm run build`: compila sin errores (21 páginas estáticas).
+- `npm run build`: compila sin errores (páginas estáticas).
 - `npm run lint` y TypeScript: sin errores.
 - `npm test`: pruebas en escritorio (1366 px) y móvil (Pixel 7):
   - Generación y codificación de enlaces de WhatsApp (general, cada servicio, formulario con tildes, ñ y símbolos).
@@ -204,7 +208,9 @@ Un enlace de WhatsApp no permite adjuntar archivos, por eso el formulario indica
   - Filtros de la galería, vista ampliada, flechas del teclado y cierre con Escape.
   - Menú móvil, sin desbordamiento horizontal.
   - Un solo H1, títulos, descripciones y canonical de cada página; JSON-LD y Open Graph.
-  - Redirecciones 301 desde las URLs anteriores `/servicios/...`.
+  - Redirecciones 301 desde las URLs anteriores `/servicios/...` y servicios retirados.
+  - Tabla de precios referenciales (portada y filtrada por servicio).
+  - Formulario comercial: validación y aviso honesto cuando no hay destino.
   - Todas las imágenes con texto alternativo; enlaces internos responden 200.
   - `sitemap.xml` y `robots.txt`.
   - Sin errores de JavaScript en la consola.

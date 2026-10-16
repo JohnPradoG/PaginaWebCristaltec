@@ -26,11 +26,15 @@ for (const key of ["serviceAreas", "hours"]) {
   if (isEmptyList(key)) warnings.push(`${key}: sin configurar (no se mostrará en la web).`);
 }
 
+const siteSrc = readFileSync(new URL("../src/config/site.ts", import.meta.url), "utf8");
+if (/commercialEndpoint:\s*null/.test(siteSrc))
+  warnings.push("forms.commercialEndpoint: sin destino. El formulario de proyectos comerciales usa WhatsApp (o avisa que no se envió) hasta que conectes Formspree u otro servicio.");
+
 const images = readFileSync(new URL("../src/content/images.ts", import.meta.url), "utf8");
 const demos = (images.match(/demo:\s*true/g) ?? []).length;
 if (demos > 0) warnings.push(`${demos} fotografías siguen siendo imágenes referenciales (src/content/images.ts).`);
 
-console.log("\nVerificación de datos de CRISTALTE\n");
+console.log("\nVerificación de datos de CRISTALTEC\n");
 for (const e of errors) console.log(`  ✗ ${e}`);
 for (const w of warnings) console.log(`  • ${w}`);
 if (errors.length === 0) console.log("  ✓ Datos obligatorios completos.");

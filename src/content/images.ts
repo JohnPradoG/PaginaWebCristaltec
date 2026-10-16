@@ -3,7 +3,7 @@
  *
  * Todas las fotografías de este archivo provienen de Unsplash y se usan bajo la
  * Licencia Unsplash (https://unsplash.com/license). NO son trabajos realizados
- * por CRISTALTE: se muestran solo como referencia visual mientras el propietario
+ * por CRISTALTEC: se muestran solo como referencia visual mientras el propietario
  * entrega fotografías reales. En la web aparecen marcadas como "Imagen referencial".
  *
  * Para reemplazarlas por fotos reales:
@@ -15,7 +15,7 @@
 export type SiteImage = {
   src: string;
   alt: string;
-  /** true = imagen de referencia de terceros, no es un trabajo de CRISTALTE. */
+  /** true = imagen de referencia de terceros, no es un trabajo de CRISTALTEC. */
   demo: boolean;
   credit?: { author: string; url: string };
 };
@@ -97,43 +97,19 @@ export const images = {
   },
   puertaTerraza: {
     src: unsplash("photo-1582734073424-1cc142558946"),
-    alt: "Puerta de vidrio con marco metálico negro hacia una terraza",
+    alt: "Mampara de vidrio con marco negro hacia una terraza",
     demo: true,
     credit: { author: "Arno Senoner", url: "https://unsplash.com/photos/dzSrwiImFlA" },
   },
-  espejoGrande: {
-    src: unsplash("photo-1691662754730-2415e37e1052"),
-    alt: "Habitación con espejo de gran formato y lámpara",
+  vitrinaExhibicion: {
+    src: unsplash("photo-1712765974517-d502e9dec8ed"),
+    alt: "Vitrina de exhibición con puertas de vidrio y repisas con platos y cuencos",
     demo: true,
-    credit: { author: "Agnieszka Stankiewicz", url: "https://unsplash.com/photos/_sDIBs35S3I" },
-  },
-  espejoMuro: {
-    src: unsplash("photo-1657941602490-1277bac681f9"),
-    alt: "Espejo instalado sobre muro en un local comercial",
-    demo: true,
-    credit: { author: "Chanidapha Sittikorn", url: "https://unsplash.com/photos/qgZic8Y33vA" },
-  },
-  barandaEscalera: {
-    src: unsplash("photo-1651336635269-d45148617073"),
-    alt: "Escalera blanca con baranda de vidrio",
-    demo: true,
-    credit: { author: "Gadiel Lazcano", url: "https://unsplash.com/photos/7YFksPMQhi0" },
-  },
-  barandaVentanal: {
-    src: unsplash("photo-1758814638045-4245efeac82d"),
-    alt: "Escalera moderna con barandas de vidrio y grandes ventanales",
-    demo: true,
-    credit: { author: "Leongsan", url: "https://unsplash.com/photos/vHVeaQtMp6M" },
-  },
-  barandaMarmol: {
-    src: unsplash("photo-1771904488645-fa6ebf7a2d06"),
-    alt: "Escalera con baranda de vidrio y muro de mármol",
-    demo: true,
-    credit: { author: "Wesley Shen", url: "https://unsplash.com/photos/2l2EslhTaOM" },
+    credit: { author: "Xingchen Yan", url: "https://unsplash.com/photos/a-display-case-with-plates-and-bowls-in-it-YSacd6NnWik" },
   },
   divisionOficina: {
     src: unsplash("photo-1521250164448-79d809c7cb0f"),
-    alt: "Oficina con división de vidrio transparente",
+    alt: "Oficina con mampara divisoria de vidrio transparente",
     demo: true,
     credit: { author: "H&CO", url: "https://unsplash.com/photos/GkuZdv11Gfo" },
   },

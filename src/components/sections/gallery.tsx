@@ -141,7 +141,7 @@ export function GallerySection({ limit, headingLevel = "h2", title = "Ideas para
         {hasDemo && (
           <p className="mt-6 text-center text-sm text-ink-muted">
             Las fotografías marcadas como “Imagen referencial” son ejemplos ilustrativos de terceros y no corresponden a
-            trabajos realizados por CRISTALTE.
+            trabajos realizados por CRISTALTEC.
           </p>
         )}
       </Container>

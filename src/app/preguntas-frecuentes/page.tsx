@@ -9,7 +9,7 @@ import { breadcrumbJsonLd, faqJsonLd, jsonLdScript, pageMetadata } from "@/lib/s
 export const metadata = pageMetadata({
   title: "Preguntas frecuentes",
   description:
-    "Respuestas sobre cotizaciones, medidas, instalación, materiales y comunas de atención de CRISTALTE, y preguntas por servicio.",
+    "Respuestas sobre cotizaciones, medidas, instalación, materiales y comunas de atención de CRISTALTEC, y preguntas por servicio.",
   path: "/preguntas-frecuentes/",
 });
 

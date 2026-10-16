@@ -1,5 +1,5 @@
 /**
- * Genera los archivos de marca de CRISTALTE (SVG vectoriales y PNG derivados).
+ * Genera los archivos de marca de CRISTALTEC (SVG vectoriales y PNG derivados).
  *
  * El texto del logotipo se convierte a trazos (paths) con la tipografía Manrope
  * ExtraBold, así el SVG se ve igual en cualquier equipo aunque no tenga la fuente.
@@ -138,45 +138,45 @@ const TAGLINE = ["ALUMINIO", "VIDRIO", "DISEÑO"];
 
 // Logotipo horizontal: isotipo + nombre + bajada.
 for (const [name, v] of Object.entries(VARIANTS)) {
-  const word = textPath("CRISTALTE", 72, 36, 33, 1.2);
+  const word = textPath("CRISTALTEC", 72, 36, 33, 1.2);
   const tag = tagline(TAGLINE, 73.5, 54, 9.6, 2.35, v.tagline);
   const width = Math.ceil(Math.max(word.end, tag.end) + 2);
   const body = isotipo(v) + `<path d="${word.d}" fill="${v.word}"/>` + tag.body;
-  files[`cristalte-logo-horizontal-${name}.svg`] = svg(width, 64, body, "CRISTALTE");
-  files[`cristalte-isotipo-${name}.svg`] = svg(64, 64, isotipo(v), "CRISTALTE");
+  files[`cristaltec-logo-horizontal-${name}.svg`] = svg(width, 64, body, "CRISTALTEC");
+  files[`cristaltec-isotipo-${name}.svg`] = svg(64, 64, isotipo(v), "CRISTALTEC");
 }
 
 // Isotipo sobre fondo azul marino: favicon, ícono de app y perfiles sociales.
 const appIconBody =
   `<rect width="64" height="64" rx="14" fill="${COLORS.navy}"/>` +
   `<g transform="translate(5.12 5.12) scale(0.84)">${isotipo(VARIANTS.dark)}</g>`;
-files["cristalte-icono-app.svg"] = svg(64, 64, appIconBody, "CRISTALTE");
+files["cristaltec-icono-app.svg"] = svg(64, 64, appIconBody, "CRISTALTEC");
 
 for (const [file, content] of Object.entries(files)) {
   writeFileSync(join(brandDir, file), content);
 }
 
 // Favicon SVG que Next.js sirve automáticamente.
-writeFileSync(join(root, "src", "app", "icon.svg"), files["cristalte-icono-app.svg"]);
+writeFileSync(join(root, "src", "app", "icon.svg"), files["cristaltec-icono-app.svg"]);
 
 // PNG derivados.
-const appIcon = Buffer.from(files["cristalte-icono-app.svg"]);
+const appIcon = Buffer.from(files["cristaltec-icono-app.svg"]);
 await sharp(appIcon, { density: 1200 }).resize(180, 180).png().toFile(join(root, "src", "app", "apple-icon.png"));
-await sharp(appIcon, { density: 1200 }).resize(512, 512).png().toFile(join(brandDir, "cristalte-icono-512.png"));
-await sharp(Buffer.from(files["cristalte-logo-horizontal-light.svg"]), { density: 600 })
+await sharp(appIcon, { density: 1200 }).resize(512, 512).png().toFile(join(brandDir, "cristaltec-icono-512.png"));
+await sharp(Buffer.from(files["cristaltec-logo-horizontal-light.svg"]), { density: 600 })
   .resize({ height: 256 })
   .png()
-  .toFile(join(brandDir, "cristalte-logo-horizontal-light.png"));
-await sharp(Buffer.from(files["cristalte-logo-horizontal-dark.svg"]), { density: 600 })
+  .toFile(join(brandDir, "cristaltec-logo-horizontal-light.png"));
+await sharp(Buffer.from(files["cristaltec-logo-horizontal-dark.svg"]), { density: 600 })
   .resize({ height: 256 })
   .png()
-  .toFile(join(brandDir, "cristalte-logo-horizontal-dark.png"));
+  .toFile(join(brandDir, "cristaltec-logo-horizontal-dark.png"));
 
 // Imagen para compartir en redes (Open Graph), 1200 × 630.
 {
   const v = VARIANTS.dark;
   // Se usa una línea base positiva: algunos renderizadores fallan con coordenadas negativas.
-  const word = textPath("CRISTALTE", 0, 104, 104, 3);
+  const word = textPath("CRISTALTEC", 0, 104, 104, 3);
   const tag = tagline(TAGLINE, 0, 28, 28, 7, v.tagline);
   const iconSize = 190;
   const gap = 44;
@@ -189,7 +189,7 @@ await sharp(Buffer.from(files["cristalte-logo-horizontal-dark.svg"]), { density:
     `<g transform="translate(${textX} 236)"><path d="${word.d}" fill="${v.word}"/></g>` +
     `<g transform="translate(${textX + 4} 364)">${tag.body}</g>` +
     `<rect x="0" y="618" width="1200" height="12" fill="${COLORS.blue}"/>`;
-  const og = svg(1200, 630, body, "CRISTALTE");
+  const og = svg(1200, 630, body, "CRISTALTEC");
   await sharp(Buffer.from(og)).png().toFile(join(root, "public", "og-image.png"));
 }
 

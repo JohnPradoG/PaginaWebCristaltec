@@ -4,7 +4,7 @@ import { Container } from "@/components/ui";
 
 export const metadata: Metadata = {
   title: "Créditos de imágenes",
-  description: "Créditos de las fotografías de referencia usadas en el sitio de CRISTALTE.",
+  description: "Créditos de las fotografías de referencia usadas en el sitio de CRISTALTEC.",
   alternates: { canonical: "/creditos-imagenes/" },
   robots: { index: false, follow: true },
 };
@@ -20,7 +20,7 @@ export default function CreditsPage() {
         <a href="https://unsplash.com/license" className="font-semibold text-brand underline" rel="noopener noreferrer" target="_blank">
           Licencia Unsplash
         </a>
-        . Se muestran como ejemplos ilustrativos y no corresponden a trabajos realizados por CRISTALTE.
+        . Se muestran como ejemplos ilustrativos y no corresponden a trabajos realizados por CRISTALTEC.
       </p>
       {list.length > 0 ? (
         <ul className="mt-10 divide-y divide-navy/10 border-y border-navy/10">
@@ -39,7 +39,7 @@ export default function CreditsPage() {
           ))}
         </ul>
       ) : (
-        <p className="mt-10 text-ink-muted">Todas las fotografías del sitio pertenecen a CRISTALTE.</p>
+        <p className="mt-10 text-ink-muted">Todas las fotografías del sitio pertenecen a CRISTALTEC.</p>
       )}
     </Container>
   );

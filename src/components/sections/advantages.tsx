@@ -44,7 +44,7 @@ export function AdvantagesSection() {
       <Container>
         <SectionHeading
           id="ventajas-title"
-          eyebrow="Por qué CRISTALTE"
+          eyebrow="Por qué CRISTALTEC"
           title="Detalles que marcan la diferencia"
         />
         <ul className="mt-14 grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">

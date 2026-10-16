@@ -1,5 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
-import { legacyServiceSlugs, servicePath, services } from "../src/content/services";
+import { priceList } from "../src/content/prices";
+import { legacyRedirects, servicePath, services } from "../src/content/services";
 
 /** Errores de consola, ignorando las fotos externas (el entorno de pruebas puede no tener acceso a Unsplash). */
 function trackConsole(page: Page) {
@@ -14,7 +15,7 @@ function trackConsole(page: Page) {
 test("portada: estructura, encabezados y metadatos", async ({ page }) => {
   const errors = trackConsole(page);
   await page.goto("/");
-  await expect(page).toHaveTitle("Ventanas, cerramientos y vidrio a medida | CRISTALTE");
+  await expect(page).toHaveTitle("Ventanas, cerramientos y vidrio a medida | CRISTALTEC");
   await expect(page.locator("h1")).toHaveCount(1);
   await expect(page.locator("h1")).toHaveText("Transformamos tus espacios con aluminio, vidrio y diseño");
   for (const id of ["inicio", "servicios", "proyectos", "nosotros", "cotizar", "preguntas", "contacto"]) {
@@ -73,15 +74,15 @@ test("galería: filtra por categoría y abre la vista ampliada", async ({ page }
   const gallery = page.locator("#proyectos");
   const items = gallery.locator("ul > li");
   const total = await items.count();
-  await gallery.getByRole("button", { name: "Barandas", exact: true }).click();
+  await gallery.getByRole("button", { name: "Terrazas", exact: true }).click();
   await expect(items).toHaveCount(3);
   expect(total).toBeGreaterThan(3);
   await items.first().getByRole("button").click();
   const dialog = page.getByRole("dialog");
   await expect(dialog).toBeVisible();
-  await expect(dialog.getByText("Barandas", { exact: true })).toBeVisible();
+  await expect(dialog.getByText("Terrazas", { exact: true })).toBeVisible();
   await page.keyboard.press("ArrowRight");
-  await expect(dialog.getByRole("heading", { level: 3 })).toHaveText("Barandas de vidrio en escalera abierta");
+  await expect(dialog.getByRole("heading", { level: 3 })).toHaveText("Balcón cerrado en departamento");
   await page.keyboard.press("Escape");
   await expect(dialog).toBeHidden();
 });
@@ -108,7 +109,7 @@ for (const s of services) {
   test(`página de servicio: ${s.slug}`, async ({ page }) => {
     const errors = trackConsole(page);
     await page.goto(servicePath(s.slug));
-    await expect(page).toHaveTitle(`${s.seo.title} | CRISTALTE`);
+    await expect(page).toHaveTitle(`${s.seo.title} | CRISTALTEC`);
     await expect(page.locator("h1")).toHaveCount(1);
     await expect(page.locator("h1")).toHaveText(s.h1);
     await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", s.seo.description);
@@ -129,6 +130,7 @@ for (const [path, h1] of [
   ["/nosotros/", "Nosotros: soluciones en aluminio, vidrio y PVC"],
   ["/contacto/", "Contacto y cotización"],
   ["/preguntas-frecuentes/", "Preguntas frecuentes"],
+  ["/proyectos-comerciales/", "Cotización para proyectos comerciales y edificios"],
 ]) {
   test(`página ${path}`, async ({ page }) => {
     const errors = trackConsole(page);
@@ -145,11 +147,13 @@ test("redirecciones 301 desde las URLs anteriores en vercel.json", async () => {
   const config = JSON.parse(readFileSync("vercel.json", "utf8")) as {
     redirects: { source: string; destination: string; permanent: boolean }[];
   };
-  for (const [oldSlug, newSlug] of Object.entries(legacyServiceSlugs)) {
-    const rule = config.redirects.find((r) => r.source === `/servicios/${oldSlug}/`);
-    expect(rule?.destination).toBe(servicePath(newSlug));
+  const validTargets = ["/", ...services.map((s) => servicePath(s.slug))];
+  for (const [from, to] of Object.entries(legacyRedirects)) {
+    const source = from.endsWith("/") ? from : `${from}/`;
+    const rule = config.redirects.find((r) => r.source === source);
+    expect(rule?.destination, source).toBe(to);
     expect(rule?.permanent).toBe(true);
-    expect(services.some((s) => s.slug === newSlug)).toBe(true);
+    expect(validTargets).toContain(to);
   }
 });
 
@@ -178,4 +182,40 @@ test("sitemap y robots", async ({ request }) => {
   expect(robots).toMatch(/User-Agent: \*/i);
   expect(robots).toMatch(/Allow: \//);
   expect(robots).toContain("Sitemap: https://cristalte-web.vercel.app/sitemap.xml");
+});
+
+test("precios referenciales: tabla en portada y filtrada por servicio", async ({ page }) => {
+  await page.goto("/");
+  const section = page.locator("#precios");
+  await expect(section.getByRole("heading", { level: 2 })).toHaveText("Precios referenciales");
+  await expect(section.locator("tbody tr")).toHaveCount(priceList.length);
+  await expect(section.getByText("$255.000")).toBeVisible();
+  await section.getByRole("link", { name: "Solicitar cotización" }).click();
+  await expect(page).toHaveURL(/#cotizar$/);
+
+  for (const s of services) {
+    const rows = priceList.filter((p) => p.service === s.slug);
+    await page.goto(servicePath(s.slug));
+    await expect(page.locator("#precios tbody tr")).toHaveCount(rows.length);
+  }
+});
+
+test("formulario comercial: valida y no simula un envío sin destino", async ({ page }) => {
+  await page.goto("/proyectos-comerciales/");
+  const form = page.locator("form").first();
+  const submit = form.locator('button[type="submit"]');
+  await submit.click();
+  await expect(form.getByText("Escribe el nombre de la empresa u organización.")).toBeVisible();
+  await expect(form.getByText("Selecciona al menos un servicio.")).toBeVisible();
+
+  await form.getByLabel(/^Empresa/).fill("Constructora Ejemplo");
+  await form.getByLabel(/^Nombre/).fill("Ana Pérez");
+  await form.getByLabel(/^Teléfono/).fill("+56 9 0000 0000");
+  await form.getByLabel(/^Comuna/).fill("Santiago");
+  await form.getByLabel(/^Tipo de proyecto/).selectOption({ index: 1 });
+  await form.getByLabel("Ventanas de aluminio").check();
+  await form.getByLabel(/^Descripción/).fill("Edificio de 12 pisos, 80 ventanas de aluminio con termopanel.");
+  await submit.click();
+  await expect(page.getByText(/no tiene un destino configurado, por lo que la solicitud no se envió/)).toBeVisible();
+  await expect(page.getByText(/enviada|recibimos/i)).toHaveCount(0);
 });
