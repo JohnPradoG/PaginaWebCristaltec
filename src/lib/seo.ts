@@ -86,6 +86,7 @@ export function businessJsonLd() {
   if (c.serviceAreas.length > 0) {
     data.areaServed = c.serviceAreas.map((name) => ({ "@type": "City", name }));
   }
+  if (c.mapLink) data.hasMap = c.mapLink;
   if (sameAs.length > 0) data.sameAs = sameAs;
   return data;
 }

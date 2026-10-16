@@ -67,7 +67,16 @@ export function getContactItems(): Item[] {
     items.push({
       icon: PinIcon,
       label: "Ubicación",
-      content: [c.address, c.commune].filter(Boolean).join(", "),
+      content: (
+        <>
+          {[c.address, c.commune, c.region].filter(Boolean).join(", ")}
+          {c.mapLink && (
+            <a href={c.mapLink} target="_blank" rel="noopener noreferrer" className="mt-1 block font-semibold underline">
+              Cómo llegar (Google Maps)
+            </a>
+          )}
+        </>
+      ),
     });
   }
   if (c.hours.length > 0) {

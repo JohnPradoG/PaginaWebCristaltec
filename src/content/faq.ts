@@ -56,7 +56,9 @@ export const faqs: FaqItem[] = [
     question: "¿En qué comunas trabajan?",
     answer:
       areas.length > 0
-        ? `Actualmente trabajamos en ${areas.join(", ")}. Si tu comuna no aparece, escríbenos y lo revisamos.`
+        ? `Atendemos en todo ${areas.join(", ")}${siteConfig.contact.region ? `, ${siteConfig.contact.region}` : ""}.${
+            siteConfig.contact.address ? ` Estamos en ${siteConfig.contact.address}, ${siteConfig.contact.commune}.` : ""
+          } Si tu comuna está fuera de esa zona, escríbenos y lo revisamos.`
         : "Escríbenos indicando tu comuna y te confirmamos si podemos atender tu proyecto.",
   },
   {

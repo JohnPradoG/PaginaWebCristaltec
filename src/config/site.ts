@@ -62,20 +62,27 @@ export const siteConfig = {
      * en null: la empresa se presenta como "empresa de área de servicio" y no se
      * publica ninguna dirección.
      */
-    address: null as string | null,
+    address: "Nueva Recoleta 3795" as string | null,
     /** Comuna principal donde está la empresa. Ej.: "Maipú". */
-    commune: null as string | null,
+    commune: "Recoleta" as string | null,
     /** Región. Ej.: "Región Metropolitana". */
-    region: null as string | null,
+    region: "Región Metropolitana" as string | null,
     /**
      * Comunas o zonas donde trabajan, si está confirmado.
      * Se muestra en Preguntas frecuentes y se usa en SEO local.
      */
-    serviceAreas: [] as string[],
+    serviceAreas: ["Santiago"] as string[],
+    /**
+     * Zona que se suma a los títulos SEO de los servicios (ej. "… en Santiago").
+     * Si está vacía se usa la comuna.
+     */
+    seoArea: "Santiago" as string | null,
     /** Horario de atención. Ej.: ["Lunes a viernes: 9:00 a 18:00"]. */
     hours: [] as string[],
     /** URL de inserción de Google Maps (Compartir → Insertar un mapa → src del iframe). */
-    mapEmbedUrl: null as string | null,
+    mapEmbedUrl: "https://www.google.com/maps?q=Nueva+Recoleta+3795,+Recoleta,+Regi%C3%B3n+Metropolitana,+Chile&output=embed" as string | null,
+    /** Enlace "Cómo llegar" que abre Google Maps. */
+    mapLink: "https://www.google.com/maps/search/?api=1&query=Nueva+Recoleta+3795,+Recoleta,+Regi%C3%B3n+Metropolitana,+Chile" as string | null,
   },
 
   social: {
@@ -117,7 +124,7 @@ export type SiteConfig = typeof siteConfig;
  * Ej.: con commune "Maipú" los títulos quedan "Ventanas de aluminio a medida en Maipú".
  */
 export function seoLocation(): string | null {
-  return siteConfig.contact.commune?.trim() || null;
+  return siteConfig.contact.seoArea?.trim() || siteConfig.contact.commune?.trim() || null;
 }
 
 /** URL del sitio sin barra final. Usa localhost mientras el dominio esté pendiente. */

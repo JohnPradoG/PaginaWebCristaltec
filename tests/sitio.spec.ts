@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { seoLocation } from "../src/config/site";
 import { priceList } from "../src/content/prices";
 import { legacyRedirects, servicePath, services } from "../src/content/services";
 
@@ -25,12 +26,14 @@ test("portada: estructura, encabezados y metadatos", async ({ page }) => {
   await expect(page.locator('link[rel="canonical"]')).toHaveCount(1);
   const jsonLd = await page.locator('script[type="application/ld+json"]').allTextContents();
   const types = jsonLd.flatMap((t) => [JSON.parse(t)].flat().map((d) => d["@type"]));
-  // Sin comuna confirmada la empresa se declara como Organization (no LocalBusiness sin dirección).
-  expect(types).toEqual(expect.arrayContaining(["Organization", "WebSite"]));
+  // Con dirección confirmada la empresa se declara como negocio local.
+  expect(types).toEqual(expect.arrayContaining(["HomeAndConstructionBusiness", "WebSite"]));
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://cristalte-web.vercel.app/");
   await expect(page.getByRole("heading", { name: "Detalles que marcan la diferencia" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "¿Tienes un proyecto en mente?" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Soluciones pensadas para tus espacios" })).toBeVisible();
+  await expect(page.locator("#contacto iframe")).toHaveAttribute("src", /google\.com\/maps.*Nueva\+Recoleta\+3795/);
+  await expect(page.locator("#contacto").getByText("Nueva Recoleta 3795, Recoleta, Región Metropolitana")).toBeVisible();
   expect(errors).toEqual([]);
 });
 
@@ -109,7 +112,7 @@ for (const s of services) {
   test(`página de servicio: ${s.slug}`, async ({ page }) => {
     const errors = trackConsole(page);
     await page.goto(servicePath(s.slug));
-    await expect(page).toHaveTitle(`${s.seo.title} | CRISTALTEC`);
+    await expect(page).toHaveTitle(`${s.seo.title}${seoLocation() ? ` en ${seoLocation()}` : ""} | CRISTALTEC`);
     await expect(page.locator("h1")).toHaveCount(1);
     await expect(page.locator("h1")).toHaveText(s.h1);
     await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", s.seo.description);

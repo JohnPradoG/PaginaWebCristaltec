@@ -1,13 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { images } from "@/content/images";
-import { ChatIcon, RulerIcon, UserIcon } from "../icons";
+import { ChatIcon, PinIcon, RulerIcon } from "../icons";
 import { btn, Container, DemoBadge } from "../ui";
 
 const highlights = [
   { icon: RulerIcon, text: "Soluciones a medida" },
   { icon: ChatIcon, text: "Asesoría en el diseño" },
-  { icon: UserIcon, text: "Atención personalizada" },
+  { icon: PinIcon, text: "Atención en todo Santiago" },
 ];
 
 export function Hero() {
