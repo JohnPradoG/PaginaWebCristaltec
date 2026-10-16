@@ -172,7 +172,7 @@ export const services: Service[] = [
     extraImages: [images.ventanalCorredera],
     galleryCategory: "Ventanas",
     seo: {
-      title: "Ventanas de aluminio a medida, monolítico o termopanel",
+      title: "Ventanas de aluminio con termopanel",
       description:
         "Fabricación e instalación de ventanas de aluminio a medida con vidrio monolítico o termopanel: correderas, proyectantes y ventanales. Cotiza con CRISTALTEC.",
     },
@@ -240,7 +240,7 @@ export const services: Service[] = [
     extraImages: [images.puertaPvcCocina],
     galleryCategory: "PVC",
     seo: {
-      title: "Ventanas de PVC con termopanel o vidrio monolítico",
+      title: "Ventanas de PVC y termopanel",
       description:
         "Ventanas de PVC a medida con vidrio monolítico o termopanel para aislar frío, calor y ruido en casas y departamentos. Compara opciones y cotiza con CRISTALTEC.",
     },
@@ -377,7 +377,7 @@ export const services: Service[] = [
     extraImages: [images.showerBano, images.showerAzulejo],
     galleryCategory: "Shower doors",
     seo: {
-      title: "Shower doors de vidrio templado y acrílico",
+      title: "Shower doors de vidrio templado",
       description:
         "Shower doors a medida en vidrio templado o acrílico para duchas y tinas: correderos, abatibles o fijos. Cotiza el shower door de tu baño con CRISTALTEC.",
     },
@@ -618,7 +618,7 @@ export const services: Service[] = [
     image: images.ventanalCorredera,
     extraImages: [images.ventanaPvc],
     seo: {
-      title: "Reparación de ventanas, puertas y termopanel",
+      title: "Reparación de ventanas y puertas",
       description:
         "Reparación y mantenimiento de ventanas, puertas, shower doors y mamparas de aluminio, PVC y vidrio: carros, burletes, cierres, vidrios rotos y termopanel empañado.",
     },

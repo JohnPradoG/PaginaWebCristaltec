@@ -33,6 +33,11 @@ export async function generateMetadata(props: PageProps<"/[servicio]">): Promise
   });
 }
 
+/** "Desde $66.000 CLP" → 66000. */
+function priceValue(price: string) {
+  return Number(price.replace(/\D/g, ""));
+}
+
 export default async function ServicePage(props: PageProps<"/[servicio]">) {
   const { servicio } = await props.params;
   const service = getService(servicio);
@@ -55,6 +60,16 @@ export default async function ServicePage(props: PageProps<"/[servicio]">) {
       url: absoluteUrl(path),
       provider: { "@id": absoluteUrl("/#empresa") },
       ...(areas.length > 0 ? { areaServed: areas.map((name) => ({ "@type": "City", name })) } : {}),
+      ...(prices.length > 0
+        ? {
+            offers: {
+              "@type": "AggregateOffer",
+              priceCurrency: "CLP",
+              lowPrice: Math.min(...prices.map((p) => priceValue(p.price))),
+              offerCount: prices.length,
+            },
+          }
+        : {}),
     },
     breadcrumbJsonLd([{ name: service.name, path }]),
     faqJsonLd(service.faqs),

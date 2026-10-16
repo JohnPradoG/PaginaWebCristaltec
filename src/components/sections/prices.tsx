@@ -25,9 +25,12 @@ export function PriceSection({ items = priceList, formHref = "#cotizar" }: { ite
             <tbody className="divide-y divide-navy/10">
               {items.map((p) => (
                 <tr key={`${p.product}-${p.size}`}>
-                  <td className="p-3 sm:p-4 text-ink">{p.product}</td>
+                  <td className="p-3 sm:p-4 text-ink">
+                    {p.product}
+                    {p.note && <span className="mt-1 block text-sm text-ink-muted">{p.note}</span>}
+                  </td>
                   <td className="p-3 sm:p-4 text-ink-muted">{p.size}</td>
-                  <td className="p-3 sm:p-4 text-right font-bold whitespace-nowrap text-navy">{p.price}</td>
+                  <td className="p-3 sm:p-4 text-right font-bold text-navy sm:whitespace-nowrap">{p.price}</td>
                 </tr>
               ))}
             </tbody>

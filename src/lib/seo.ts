@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import { getSiteUrl, isWhatsAppConfigured, siteConfig } from "@/config/site";
 import type { FaqItem } from "@/content/faq-types";
 
-export const defaultTitle = "Ventanas, cerramientos y vidrio a medida | CRISTALTEC";
+export const defaultTitle = "Ventanas de aluminio y PVC en Santiago | CRISTALTEC";
 
 export const defaultDescription =
-  "CRISTALTEC: ventanas de aluminio y PVC con vidrio monolítico o termopanel, puertas, shower doors, cerramientos de terrazas, mamparas, vitrinas a medida y reparación. Cotiza por WhatsApp.";
+  "Ventanas de aluminio y PVC con termopanel, shower doors, mamparas, vitrinas y cerramientos a medida en Santiago. Reparación y cotización por WhatsApp.";
 
 export function absoluteUrl(path = "/") {
   return `${getSiteUrl()}${path.startsWith("/") ? path : `/${path}`}`;

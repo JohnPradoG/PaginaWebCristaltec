@@ -4,7 +4,7 @@ import { CtaBanner } from "@/components/sections/cta-banner";
 import { breadcrumbJsonLd, jsonLdScript, pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
-  title: "Nosotros",
+  title: "Nosotros: aluminio, vidrio y PVC en Santiago",
   description:
     "Conoce CRISTALTEC: soluciones a medida en aluminio, vidrio y PVC para hogares, comercios y proyectos de construcción.",
   path: "/nosotros/",

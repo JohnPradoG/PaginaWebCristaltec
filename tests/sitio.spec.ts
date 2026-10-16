@@ -16,7 +16,7 @@ function trackConsole(page: Page) {
 test("portada: estructura, encabezados y metadatos", async ({ page }) => {
   const errors = trackConsole(page);
   await page.goto("/");
-  await expect(page).toHaveTitle("Ventanas, cerramientos y vidrio a medida | CRISTALTEC");
+  await expect(page).toHaveTitle("Ventanas de aluminio y PVC en Santiago | CRISTALTEC");
   await expect(page.locator("h1")).toHaveCount(1);
   await expect(page.locator("h1")).toHaveText("Transformamos tus espacios con aluminio, vidrio y diseño");
   for (const id of ["inicio", "servicios", "proyectos", "nosotros", "cotizar", "preguntas", "contacto"]) {
@@ -192,7 +192,11 @@ test("precios referenciales: tabla en portada y filtrada por servicio", async ({
   const section = page.locator("#precios");
   await expect(section.getByRole("heading", { level: 2 })).toHaveText("Precios referenciales");
   await expect(section.locator("tbody tr")).toHaveCount(priceList.length);
-  await expect(section.getByText("$255.000")).toBeVisible();
+  await expect(section.getByText("$255.000 CLP")).toBeVisible();
+  await expect(section.getByText("Desde $80.000 CLP")).toBeVisible();
+  await expect(
+    section.getByText("Desde $80.000. El precio final depende de las medidas, el diseño y las características del proyecto."),
+  ).toBeVisible();
   await section.getByRole("link", { name: "Solicitar cotización" }).click();
   await expect(page).toHaveURL(/#cotizar$/);
 
