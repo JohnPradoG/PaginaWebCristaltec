@@ -20,7 +20,7 @@ if (!siteConfig.siteUrl) {
 // una rama (…-git-…) piden iniciar sesión: Google no puede leerlas.
 if (/-git-|-vano6\.vercel\.app/.test(siteConfig.siteUrl)) {
   const message = `siteUrl (${siteConfig.siteUrl}) es una dirección protegida de Vercel que Google no puede ver.`;
-  if (isProductionDeploy) throw new Error(`[CRISTALTEC] ${message} Usa https://cristalte-web.vercel.app o el dominio propio.`);
+  if (isProductionDeploy) throw new Error(`[CRISTALTEC] ${message} Usa el dominio propio https://cristaltecsantiago.cl.`);
   console.warn(`\n⚠️  [CRISTALTEC] ${message}\n`);
 }
 if (!isWhatsAppConfigured()) {

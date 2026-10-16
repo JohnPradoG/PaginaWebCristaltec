@@ -30,15 +30,12 @@ export const siteConfig = {
    * DIRECCIÓN DEL SITIO (DOMINIO). Sin barra al final.
    * Se usa para la URL canónica, el sitemap, robots.txt y Open Graph.
    *
-   * Hoy es la dirección gratuita y PÚBLICA de Vercel. Otras direcciones de
-   * Vercel del proyecto (…-vano6.vercel.app, …-git-…) piden iniciar sesión y
+   * Dominio propio comprado en NIC Chile. La dirección gratuita
+   * cristalte-web.vercel.app redirige aquí (ver vercel.json). Otras direcciones
+   * de Vercel del proyecto (…-vano6.vercel.app, …-git-…) piden iniciar sesión y
    * Google no puede verlas: no las uses aquí.
-   *
-   * Cuando compres el dominio definitivo (ej. "https://www.cristalte.cl"),
-   * cámbialo aquí o define la variable NEXT_PUBLIC_SITE_URL en Vercel, y sigue
-   * los pasos de "Dominio propio" en el README.
    */
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://cristalte-web.vercel.app",
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://cristaltecsantiago.cl",
 
   /**
    * NÚMERO DE WHATSAPP (WHATSAPP_NUMBER)
