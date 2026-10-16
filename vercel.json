@@ -2,17 +2,6 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "redirects": [
     {
-      "source": "/:path*",
-      "has": [
-        {
-          "type": "host",
-          "value": "cristalte-web.vercel.app"
-        }
-      ],
-      "destination": "https://cristaltecsantiago.cl/:path*",
-      "permanent": true
-    },
-    {
       "source": "/servicios/cerramientos-de-terrazas",
       "destination": "/cerramientos-de-terrazas/",
       "permanent": true
