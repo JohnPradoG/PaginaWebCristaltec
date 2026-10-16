@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { siteConfig } from "@/config/site";
 import { whatsappMessages } from "@/lib/whatsapp";
 import { WhatsAppLink } from "../whatsapp-link";
@@ -22,13 +21,13 @@ export function ContactSection() {
             tone="light"
           />
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <WhatsAppLink message={whatsappMessages.general()} className={btn("whatsapp", "text-base")}>
+            <WhatsAppLink trackLabel="contacto" message={whatsappMessages.general()} className={btn("whatsapp", "text-base")}>
               <WhatsAppIcon className="size-5" />
               Escribir por WhatsApp
             </WhatsAppLink>
-            <Link href="/#cotizar" className={btn("outlineLight", "text-base")}>
+            <a href="#cotizar" className={btn("outlineLight", "text-base")}>
               Ir al formulario
-            </Link>
+            </a>
           </div>
         </div>
         <div className="rounded-2xl border border-white/15 bg-navy-950/50 p-6 sm:p-8">

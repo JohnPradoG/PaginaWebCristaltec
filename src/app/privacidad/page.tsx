@@ -1,12 +1,12 @@
-import type { Metadata } from "next";
 import { siteConfig } from "@/config/site";
 import { Container } from "@/components/ui";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Aviso de privacidad",
   description: "Cómo CRISTALTE trata los datos que compartes al solicitar una cotización.",
-  alternates: { canonical: "/privacidad/" },
-};
+  path: "/privacidad/",
+});
 
 export default function PrivacyPage() {
   const email = siteConfig.contact.email;
@@ -37,7 +37,7 @@ export default function PrivacyPage() {
         <h2>Medición del sitio</h2>
         <p>
           {siteConfig.analytics.googleAnalyticsId
-            ? "Este sitio utiliza Google Analytics para conocer de forma agregada cómo se usa la página. Google Analytics puede usar cookies."
+            ? "Si lo aceptas en el aviso que aparece al entrar, este sitio usa Google Analytics para conocer de forma agregada cuántas personas lo visitan, qué páginas ven y cuántas consultas se inician por WhatsApp. Google Analytics usa cookies. Si lo rechazas, no se carga. Puedes cambiar tu decisión borrando los datos del sitio en tu navegador."
             : "Actualmente este sitio no utiliza herramientas de medición ni cookies de seguimiento."}
         </p>
         <h2>Tus derechos</h2>

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
-import { services } from "@/content/services";
+import { servicePath, services } from "@/content/services";
 import { navItems } from "@/content/navigation";
 import { ContactList, SocialLinks } from "./contact-details";
 import { Container } from "./ui";
@@ -34,7 +34,7 @@ export function SiteFooter() {
               </li>
             ))}
             <li>
-              <Link href="/#cotizar" className="text-white/85 hover:text-white hover:underline">
+              <Link href="/contacto/" className="text-white/85 hover:text-white hover:underline">
                 Solicitar cotización
               </Link>
             </li>
@@ -46,7 +46,7 @@ export function SiteFooter() {
           <ul className="mt-4 space-y-2">
             {services.map((s) => (
               <li key={s.slug}>
-                <Link href={`/servicios/${s.slug}/`} className="text-white/85 hover:text-white hover:underline">
+                <Link href={servicePath(s.slug)} className="text-white/85 hover:text-white hover:underline">
                   {s.name}
                 </Link>
               </li>

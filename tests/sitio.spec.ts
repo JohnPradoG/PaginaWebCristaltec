@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
-import { services } from "../src/content/services";
+import { legacyServiceSlugs, servicePath, services } from "../src/content/services";
 
 /** Errores de consola, ignorando las fotos externas (el entorno de pruebas puede no tener acceso a Unsplash). */
 function trackConsole(page: Page) {
@@ -14,7 +14,7 @@ function trackConsole(page: Page) {
 test("portada: estructura, encabezados y metadatos", async ({ page }) => {
   const errors = trackConsole(page);
   await page.goto("/");
-  await expect(page).toHaveTitle("CRISTALTE | Aluminio, vidrio y PVC a medida");
+  await expect(page).toHaveTitle("Ventanas, cerramientos y vidrio a medida | CRISTALTE");
   await expect(page.locator("h1")).toHaveCount(1);
   await expect(page.locator("h1")).toHaveText("Transformamos tus espacios con aluminio, vidrio y diseño");
   for (const id of ["inicio", "servicios", "proyectos", "nosotros", "cotizar", "preguntas", "contacto"]) {
@@ -23,8 +23,10 @@ test("portada: estructura, encabezados y metadatos", async ({ page }) => {
   await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", /og-image\.png$/);
   await expect(page.locator('link[rel="canonical"]')).toHaveCount(1);
   const jsonLd = await page.locator('script[type="application/ld+json"]').allTextContents();
-  const types = jsonLd.map((t) => JSON.parse(t)["@type"]);
-  expect(types).toEqual(expect.arrayContaining(["LocalBusiness", "FAQPage"]));
+  const types = jsonLd.flatMap((t) => [JSON.parse(t)].flat().map((d) => d["@type"]));
+  // Sin comuna confirmada la empresa se declara como Organization (no LocalBusiness sin dirección).
+  expect(types).toEqual(expect.arrayContaining(["Organization", "WebSite"]));
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://cristalte-web.vercel.app/");
   await expect(page.getByRole("heading", { name: "Detalles que marcan la diferencia" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "¿Tienes un proyecto en mente?" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Soluciones pensadas para tus espacios" })).toBeVisible();
@@ -93,7 +95,7 @@ test("navegación móvil", async ({ page, isMobile }) => {
   await expect(menu).toBeVisible();
   await menu.getByRole("link", { name: "Proyectos" }).click();
   await expect(menu).toBeHidden();
-  await expect(page).toHaveURL(/#proyectos$/);
+  await expect(page).toHaveURL(/\/proyectos\/$/);
 });
 
 test("sin desbordamiento horizontal", async ({ page }) => {
@@ -105,28 +107,75 @@ test("sin desbordamiento horizontal", async ({ page }) => {
 for (const s of services) {
   test(`página de servicio: ${s.slug}`, async ({ page }) => {
     const errors = trackConsole(page);
-    await page.goto(`/servicios/${s.slug}/`);
+    await page.goto(servicePath(s.slug));
     await expect(page).toHaveTitle(`${s.seo.title} | CRISTALTE`);
-    await expect(page.locator("h1")).toHaveText(s.name);
+    await expect(page.locator("h1")).toHaveCount(1);
+    await expect(page.locator("h1")).toHaveText(s.h1);
     await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", s.seo.description);
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", `https://cristalte-web.vercel.app${servicePath(s.slug)}`);
+    // Formulario en la misma página, con el servicio elegido.
+    await expect(page.locator("#cotizar select[name=service]")).toHaveValue(s.name);
+    // Los botones de WhatsApp sin número llevan al formulario de esta misma página.
+    for (const href of await page.locator('a[data-whatsapp="pending"]').evaluateAll((els) => els.map((e) => e.getAttribute("href")))) {
+      expect(["#cotizar", "/#cotizar"]).toContain(href);
+    }
+    for (const q of s.faqs) await expect(page.getByRole("heading", { name: q.question })).toHaveCount(1);
     expect(errors).toEqual([]);
   });
 }
 
+for (const [path, h1] of [
+  ["/proyectos/", "Proyectos de aluminio, vidrio y PVC"],
+  ["/nosotros/", "Nosotros: soluciones en aluminio, vidrio y PVC"],
+  ["/contacto/", "Contacto y cotización"],
+  ["/preguntas-frecuentes/", "Preguntas frecuentes"],
+]) {
+  test(`página ${path}`, async ({ page }) => {
+    const errors = trackConsole(page);
+    await page.goto(path);
+    await expect(page.locator("h1")).toHaveCount(1);
+    await expect(page.locator("h1")).toHaveText(h1);
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", `https://cristalte-web.vercel.app${path}`);
+    expect(errors).toEqual([]);
+  });
+}
+
+test("redirecciones 301 desde las URLs anteriores en vercel.json", async () => {
+  const { readFileSync } = await import("node:fs");
+  const config = JSON.parse(readFileSync("vercel.json", "utf8")) as {
+    redirects: { source: string; destination: string; permanent: boolean }[];
+  };
+  for (const [oldSlug, newSlug] of Object.entries(legacyServiceSlugs)) {
+    const rule = config.redirects.find((r) => r.source === `/servicios/${oldSlug}/`);
+    expect(rule?.destination).toBe(servicePath(newSlug));
+    expect(rule?.permanent).toBe(true);
+    expect(services.some((s) => s.slug === newSlug)).toBe(true);
+  }
+});
+
 test("todos los enlaces internos responden", async ({ page, request }) => {
-  await page.goto("/");
-  const hrefs = await page.locator("a[href^='/']").evaluateAll((els) => [
-    ...new Set(els.map((e) => (e.getAttribute("href") ?? "").split("#")[0]).filter(Boolean)),
-  ]);
-  for (const href of hrefs) {
-    const res = await request.get(href);
-    expect(res.status(), href).toBe(200);
+  const checked = new Set<string>();
+  for (const start of ["/", servicePath(services[0].slug), "/preguntas-frecuentes/"]) {
+    await page.goto(start);
+    const hrefs = await page.locator("a[href^='/']").evaluateAll((els) => [
+      ...new Set(els.map((e) => (e.getAttribute("href") ?? "").split("#")[0]).filter(Boolean)),
+    ]);
+    for (const href of hrefs) {
+      if (checked.has(href)) continue;
+      checked.add(href);
+      const res = await request.get(href);
+      expect(res.status(), href).toBe(200);
+    }
   }
 });
 
 test("sitemap y robots", async ({ request }) => {
   const sitemap = await (await request.get("/sitemap.xml")).text();
-  for (const s of services) expect(sitemap).toContain(`/servicios/${s.slug}/`);
+  for (const s of services) expect(sitemap).toContain(`https://cristalte-web.vercel.app${servicePath(s.slug)}`);
+  expect(sitemap).not.toContain("/servicios/");
+  expect(sitemap).not.toContain("vano6");
   const robots = await (await request.get("/robots.txt")).text();
   expect(robots).toMatch(/User-Agent: \*/i);
+  expect(robots).toMatch(/Allow: \//);
+  expect(robots).toContain("Sitemap: https://cristalte-web.vercel.app/sitemap.xml");
 });

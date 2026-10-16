@@ -1,17 +1,19 @@
 import type { MetadataRoute } from "next";
-import { services } from "@/content/services";
+import { servicePath, services } from "@/content/services";
 import { absoluteUrl } from "@/lib/seo";
 
 export const dynamic = "force-static";
 
+/** Solo páginas que deben aparecer en Google. Las rutas terminan en "/" igual que el canonical. */
 export default function sitemap(): MetadataRoute.Sitemap {
-  return [
-    { url: absoluteUrl("/"), changeFrequency: "monthly", priority: 1 },
-    ...services.map((s) => ({
-      url: absoluteUrl(`/servicios/${s.slug}/`),
-      changeFrequency: "monthly" as const,
-      priority: 0.8,
-    })),
-    { url: absoluteUrl("/privacidad/"), changeFrequency: "yearly", priority: 0.2 },
+  const paths = [
+    "/",
+    ...services.map((s) => servicePath(s.slug)),
+    "/proyectos/",
+    "/nosotros/",
+    "/preguntas-frecuentes/",
+    "/contacto/",
+    "/privacidad/",
   ];
+  return paths.map((path) => ({ url: absoluteUrl(path) }));
 }

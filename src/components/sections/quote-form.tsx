@@ -4,6 +4,7 @@ import { useId, useState, type FormEvent, type ReactNode } from "react";
 import { isWhatsAppConfigured } from "@/config/site";
 import { serviceOptions } from "@/content/services";
 import { buildWhatsAppUrl, whatsappMessages, type QuoteFormData } from "@/lib/whatsapp";
+import { trackEvent } from "@/lib/analytics";
 import { CheckIcon, WhatsAppIcon } from "../icons";
 import { btn, Container, SectionHeading } from "../ui";
 
@@ -25,7 +26,7 @@ export function validateQuote(data: QuoteFormData): Errors {
   const digits = data.phone.replace(/\D/g, "");
   if (!data.phone.trim()) errors.phone = "Escribe tu teléfono o WhatsApp.";
   else if (digits.length < 8 || digits.length > 15 || !/^[+\d\s()-]+$/.test(data.phone.trim()))
-    errors.phone = "Revisa el número. Ejemplo de formato: +56 9 1234 5678.";
+    errors.phone = "Revisa el número. Formato: +56 9 y 8 dígitos.";
   if (data.commune.trim().length < 2) errors.commune = "Indica la comuna del proyecto.";
   if (!data.service) errors.service = "Selecciona el servicio que necesitas.";
   if (data.description.trim().length < 10) errors.description = "Cuéntanos un poco más de tu proyecto (mínimo 10 caracteres).";
@@ -69,8 +70,17 @@ function Field({
   );
 }
 
-export function QuoteFormSection() {
-  const [data, setData] = useState<QuoteFormData>(empty);
+type QuoteFormProps = {
+  /** Servicio preseleccionado (nombre tal como aparece en el selector). */
+  defaultService?: string;
+  /** Título de la sección. */
+  title?: string;
+  /** Fondo alternativo para alternar secciones. */
+  tone?: "white" | "mist";
+};
+
+export function QuoteFormSection({ defaultService = "", title = "Solicita tu cotización", tone = "white" }: QuoteFormProps = {}) {
+  const [data, setData] = useState<QuoteFormData>({ ...empty, service: defaultService });
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<"idle" | "opened" | "blocked" | "pending-number">("idle");
   const [fallbackUrl, setFallbackUrl] = useState<string | null>(null);
@@ -97,6 +107,7 @@ export function QuoteFormSection() {
       setStatus("pending-number");
       return;
     }
+    trackEvent("generate_lead", { method: "formulario_whatsapp", service: data.service });
     const win = window.open(url, "_blank", "noopener,noreferrer");
     setFallbackUrl(url);
     setStatus(win === null ? "blocked" : "opened");
@@ -115,13 +126,13 @@ export function QuoteFormSection() {
   });
 
   return (
-    <section id="cotizar" aria-labelledby="cotizar-title" className="py-20 sm:py-24">
+    <section id="cotizar" aria-labelledby="cotizar-title" className={`py-20 sm:py-24 ${tone === "mist" ? "bg-mist" : ""}`}>
       <Container className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
         <div>
           <SectionHeading
             id="cotizar-title"
             eyebrow="Cotización"
-            title="Solicita tu cotización"
+            title={title}
             intro="Completa el formulario y prepararemos tu mensaje para enviarlo por WhatsApp. Solo te tomará un minuto."
             align="left"
           />
@@ -142,7 +153,7 @@ export function QuoteFormSection() {
         <form
           noValidate
           onSubmit={onSubmit}
-          className="rounded-2xl border border-navy/10 bg-mist p-5 sm:p-8"
+          className={`rounded-2xl border border-navy/10 p-5 sm:p-8 ${tone === "mist" ? "bg-white" : "bg-mist"}`}
           aria-describedby={`${uid}-nota`}
         >
           <div className="grid gap-5 sm:grid-cols-2">
@@ -235,7 +246,7 @@ export function QuoteFormSection() {
               <p className="rounded-lg border border-brand/30 bg-white p-4 text-navy">
                 Abrimos WhatsApp con tu mensaje. Para completar la solicitud, presiona <strong>Enviar</strong> en el
                 chat. Si no se abrió,{" "}
-                <a href={fallbackUrl ?? "#"} target="_blank" rel="noopener noreferrer" className="font-bold text-brand underline">
+                <a href={fallbackUrl ?? "#"} target="_blank" rel="noopener noreferrer" className="font-bold text-brand-dark underline">
                   toca aquí
                 </a>
                 .
@@ -244,7 +255,7 @@ export function QuoteFormSection() {
             {status === "blocked" && (
               <p className="rounded-lg border border-brand/30 bg-white p-4 text-navy">
                 Tu navegador bloqueó la nueva ventana.{" "}
-                <a href={fallbackUrl ?? "#"} target="_blank" rel="noopener noreferrer" className="font-bold text-brand underline">
+                <a href={fallbackUrl ?? "#"} target="_blank" rel="noopener noreferrer" className="font-bold text-brand-dark underline">
                   Abre WhatsApp aquí
                 </a>{" "}
                 para enviar tu mensaje.

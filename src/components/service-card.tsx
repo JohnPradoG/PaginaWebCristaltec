@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { Service } from "@/content/services";
+import { servicePath, type Service } from "@/content/services";
 import { whatsappMessages } from "@/lib/whatsapp";
 import { WhatsAppLink } from "./whatsapp-link";
 import { ArrowRightIcon, WhatsAppIcon } from "./icons";
@@ -8,7 +8,7 @@ import { btn, DemoBadge } from "./ui";
 
 export function ServiceCard({ service, headingLevel = "h3" }: { service: Service; headingLevel?: "h2" | "h3" }) {
   const Heading = headingLevel;
-  const href = `/servicios/${service.slug}/`;
+  const href = servicePath(service.slug);
   return (
     <article className="group flex flex-col overflow-hidden rounded-2xl border border-navy/10 bg-white shadow-[0_12px_32px_-20px_rgb(16_45_74_/_0.45)]">
       <Link href={href} className="relative block aspect-[4/3] overflow-hidden bg-mist" tabIndex={-1} aria-hidden>
@@ -32,6 +32,7 @@ export function ServiceCard({ service, headingLevel = "h3" }: { service: Service
         <div className="mt-5 flex flex-col gap-2">
           <WhatsAppLink
             message={whatsappMessages.service(service.name)}
+            trackLabel={`tarjeta:${service.slug}`}
             className={btn("whatsapp", "w-full px-3 text-sm whitespace-nowrap")}
             ariaLabel={`Consultar por WhatsApp sobre ${service.name}`}
           >
@@ -40,7 +41,7 @@ export function ServiceCard({ service, headingLevel = "h3" }: { service: Service
           </WhatsAppLink>
           <Link
             href={href}
-            className="inline-flex min-h-11 items-center justify-center gap-1 rounded-lg text-[15px] font-bold text-brand hover:bg-mist"
+            className="inline-flex min-h-11 items-center justify-center gap-1 rounded-lg text-[15px] font-bold text-brand-dark hover:bg-mist"
           >
             Ver detalles<span className="sr-only"> de {service.name}</span>
             <ArrowRightIcon className="size-4" />

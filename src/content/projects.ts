@@ -8,8 +8,28 @@ import { images, type SiteImage } from "./images";
  * marca como "Imagen referencial" y los textos están escritos como ejemplos
  * de lo que se puede hacer, no como trabajos realizados.
  *
- * Para agregar un trabajo real copia un bloque, cambia la foto (en /public/proyectos/),
- * escribe la descripción real, agrega la ubicación si quieres y deja `demo: false`.
+ * ── PLANTILLA PARA PUBLICAR UN TRABAJO REAL ─────────────────────────────────
+ * 1. Copia las fotos optimizadas a /public/proyectos/ (ver README).
+ * 2. Agrega la foto en src/content/images.ts con `demo: false` y sin `credit`.
+ * 3. Copia este bloque al INICIO de la lista `projects` (los primeros se ven en
+ *    la portada) y completa solo lo que sea verdad:
+ *
+ *   {
+ *     id: "terraza-departamento-2026-01",          // único, sin espacios
+ *     title: "Cierre de terraza en departamento",  // qué se hizo
+ *     category: "Terrazas",                        // una de projectCategories
+ *     description: "Resumen en una o dos frases.",
+ *     need: "Qué necesitaba el cliente.",
+ *     solution: "Qué solución se instaló y por qué.",
+ *     material: "Perfil de aluminio color negro, vidrio ...",
+ *     location: "Comuna",                          // SOLO con permiso del cliente
+ *     date: "2026-01",                             // año y mes, opcional
+ *     image: images.terrazaDepto01,                // foto final (después)
+ *     before: images.terrazaDepto01Antes,          // foto del antes, opcional
+ *   },
+ *
+ * No publiques comuna, fotos del interior de una casa ni datos del cliente sin
+ * su autorización. No escribas testimonios que el cliente no haya dado.
  */
 
 export const projectCategories = [
@@ -29,9 +49,31 @@ export type Project = {
   title: string;
   category: ProjectCategory;
   description: string;
-  /** Comuna o ciudad, opcional. Solo para trabajos reales. */
+  /** Comuna o ciudad, opcional. Solo para trabajos reales y con permiso del cliente. */
   location?: string;
+  /** Lo que necesitaba el cliente (trabajos reales). */
+  need?: string;
+  /** La solución realizada (trabajos reales). */
+  solution?: string;
+  /** Materiales usados (trabajos reales). */
+  material?: string;
+  /** Fecha del trabajo, formato "AAAA-MM". */
+  date?: string;
+  /** Foto principal (el resultado). */
   image: SiteImage;
+  /** Foto del antes, opcional. */
+  before?: SiteImage;
+};
+
+/** Servicio al que pertenece cada categoría de la galería. */
+export const categoryService: Record<ProjectCategory, string> = {
+  Terrazas: "cerramientos-de-terrazas",
+  "Shower doors": "shower-doors",
+  Ventanas: "ventanas-de-aluminio",
+  Puertas: "puertas-de-aluminio-y-vidrio",
+  Espejos: "espejos-a-medida",
+  Barandas: "barandas-de-vidrio",
+  PVC: "ventanas-de-pvc",
 };
 
 export const projects: Project[] = [

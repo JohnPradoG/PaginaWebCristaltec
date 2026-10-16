@@ -31,7 +31,9 @@ export function SectionHeading({
   id,
   align = "center",
   tone = "dark",
+  as: Heading = "h2",
 }: {
+  as?: "h1" | "h2";
   eyebrow?: string;
   title: string;
   intro?: string;
@@ -47,12 +49,12 @@ export function SectionHeading({
           {eyebrow}
         </p>
       )}
-      <h2
+      <Heading
         id={id}
         className={`mt-2 text-3xl font-extrabold tracking-tight sm:text-4xl ${tone === "dark" ? "text-navy" : "text-white"}`}
       >
         {title}
-      </h2>
+      </Heading>
       <span aria-hidden className={`mt-4 block h-1 w-14 rounded bg-brand ${centered ? "mx-auto" : ""}`} />
       {intro && (
         <p className={`mt-5 text-lg leading-relaxed ${tone === "dark" ? "text-ink-muted" : "text-white/85"}`}>{intro}</p>

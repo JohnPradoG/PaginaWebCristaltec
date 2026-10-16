@@ -1,13 +1,117 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    {
+      "source": "/servicios/cerramientos-de-terrazas",
+      "destination": "/cerramientos-de-terrazas/",
+      "permanent": true
+    },
+    {
+      "source": "/servicios/cerramientos-de-terrazas/",
+      "destination": "/cerramientos-de-terrazas/",
+      "permanent": true
+    },
+    {
+      "source": "/servicios/shower-doors-y-mamparas",
+      "destination": "/shower-doors/",
+      "permanent": true
+    },
+    {
+      "source": "/servicios/shower-doors-y-mamparas/",
+      "destination": "/shower-doors/",
+      "permanent": true
+    },
+    {
+      "source": "/servicios/ventanas-de-aluminio",
+      "destination": "/ventanas-de-aluminio/",
+      "permanent": true
+    },
+    {
+      "source": "/servicios/ventanas-de-aluminio/",
+      "destination": "/ventanas-de-aluminio/",
+      "permanent": true
+    },
+    {
+      "source": "/servicios/ventanas-de-pvc",
+      "destination": "/ventanas-de-pvc/",
+      "permanent": true
+    },
+    {
+      "source": "/servicios/ventanas-de-pvc/",
+      "destination": "/ventanas-de-pvc/",
+      "permanent": true
+    },
+    {
+      "source": "/servicios/puertas-de-aluminio-y-vidrio",
+      "destination": "/puertas-de-aluminio-y-vidrio/",
+      "permanent": true
+    },
+    {
+      "source": "/servicios/puertas-de-aluminio-y-vidrio/",
+      "destination": "/puertas-de-aluminio-y-vidrio/",
+      "permanent": true
+    },
+    {
+      "source": "/servicios/espejos-a-medida",
+      "destination": "/espejos-a-medida/",
+      "permanent": true
+    },
+    {
+      "source": "/servicios/espejos-a-medida/",
+      "destination": "/espejos-a-medida/",
+      "permanent": true
+    },
+    {
+      "source": "/servicios/barandas-de-vidrio",
+      "destination": "/barandas-de-vidrio/",
+      "permanent": true
+    },
+    {
+      "source": "/servicios/barandas-de-vidrio/",
+      "destination": "/barandas-de-vidrio/",
+      "permanent": true
+    },
+    {
+      "source": "/servicios/divisiones-y-trabajos-especiales",
+      "destination": "/trabajos-especiales/",
+      "permanent": true
+    },
+    {
+      "source": "/servicios/divisiones-y-trabajos-especiales/",
+      "destination": "/trabajos-especiales/",
+      "permanent": true
+    },
+    {
+      "source": "/servicios",
+      "destination": "/#servicios",
+      "permanent": true
+    },
+    {
+      "source": "/servicios/",
+      "destination": "/#servicios",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
-        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        }
       ]
     }
   ]

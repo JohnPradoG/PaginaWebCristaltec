@@ -5,7 +5,9 @@ import { siteConfig } from "@/config/site";
  * Las respuestas son prudentes a propósito. Cuando tengas datos confirmados
  * (comunas, plazos habituales, formas de pago), edítalas aquí.
  */
-export type FaqItem = { question: string; answer: string };
+import type { FaqItem } from "./faq-types";
+
+export type { FaqItem };
 
 const areas = siteConfig.contact.serviceAreas;
 

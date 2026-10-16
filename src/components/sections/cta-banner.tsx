@@ -25,7 +25,7 @@ export function CtaBanner() {
             adaptada a tu espacio.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <WhatsAppLink message={whatsappMessages.project()} className={btn("whatsapp", "text-base")}>
+            <WhatsAppLink trackLabel="banner" message={whatsappMessages.project()} className={btn("whatsapp", "text-base")}>
               <WhatsAppIcon className="size-5" />
               Cotizar mi proyecto
             </WhatsAppLink>

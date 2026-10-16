@@ -1,4 +1,4 @@
-import { faqJsonLd, jsonLdScript, localBusinessJsonLd } from "@/lib/seo";
+import { defaultDescription, defaultTitle, pageMetadata } from "@/lib/seo";
 import { Hero } from "@/components/sections/hero";
 import { ServicesSection } from "@/components/sections/services";
 import { AdvantagesSection } from "@/components/sections/advantages";
@@ -9,19 +9,19 @@ import { AboutSection } from "@/components/sections/about";
 import { FaqSection } from "@/components/sections/faq";
 import { ContactSection } from "@/components/sections/contact";
 
+export const metadata = pageMetadata({ title: defaultTitle, description: defaultDescription, path: "/", absoluteTitle: true });
+
 export default function HomePage() {
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(localBusinessJsonLd())} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(faqJsonLd())} />
       <Hero />
       <ServicesSection />
       <AdvantagesSection />
-      <GallerySection />
+      <GallerySection limit={6} />
       <CtaBanner />
       <AboutSection />
       <QuoteFormSection />
-      <FaqSection />
+      <FaqSection limit={4} />
       <ContactSection />
     </>
   );

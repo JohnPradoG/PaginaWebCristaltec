@@ -12,7 +12,7 @@ import { btn, Container, DemoBadge, SectionHeading } from "../ui";
  */
 const ownerStory: string[] = [];
 
-export function AboutSection() {
+export function AboutSection({ headingLevel = "h2" }: { headingLevel?: "h1" | "h2" } = {}) {
   const img = images.ventanalCorredera;
   return (
     <section id="nosotros" aria-labelledby="nosotros-title" className="py-20 sm:py-24">
@@ -25,8 +25,9 @@ export function AboutSection() {
           <SectionHeading
             id="nosotros-title"
             eyebrow="Nosotros"
-            title="Soluciones pensadas para tus espacios"
+            title={headingLevel === "h1" ? "Nosotros: soluciones en aluminio, vidrio y PVC" : "Soluciones pensadas para tus espacios"}
             align="left"
+            as={headingLevel}
           />
           <div className="mt-6 space-y-4 text-lg leading-relaxed text-ink-muted">
             <p>
@@ -50,9 +51,16 @@ export function AboutSection() {
               </li>
             ))}
           </ul>
-          <Link href="/#cotizar" className={btn("primary", "mt-9")}>
-            Conversemos tu proyecto
-          </Link>
+          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+            <Link href="/contacto/" className={btn("primary")}>
+              Conversemos tu proyecto
+            </Link>
+            {headingLevel === "h2" && (
+              <Link href="/nosotros/" className={btn("outlineDark")}>
+                Conocer más
+              </Link>
+            )}
+          </div>
         </div>
       </Container>
     </section>

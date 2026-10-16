@@ -15,17 +15,17 @@ El sitio funciona sin estos datos, pero **no se debe publicar en producción** h
 | Dato | Campo | Obligatorio |
 |---|---|---|
 | Número de WhatsApp (formato `569XXXXXXXX`, solo dígitos) | `whatsappNumber` | **Sí** |
-| Dominio (hoy: dirección gratuita de Vercel; cambiar si compras uno propio) | `siteUrl` | **Sí** (ya configurado) |
+| Dominio (hoy: `https://cristalte-web.vercel.app`, la única dirección pública de Vercel) | `siteUrl` o variable `NEXT_PUBLIC_SITE_URL` | **Sí** (ya configurado) |
 | Teléfono para llamadas | `contact.phone` | No |
 | Correo | `contact.email` | No |
 | Dirección del taller o local | `contact.address` | No |
-| Comuna y región | `contact.commune` | No |
+| Comuna principal y región (se suma a los títulos SEO de los servicios) | `contact.commune`, `contact.region` | Muy recomendado |
 | Comunas donde trabajan (si está confirmado) | `contact.serviceAreas` | No |
 | Horario de atención | `contact.hours` | No |
 | Mapa de Google (URL para insertar) | `contact.mapEmbedUrl` | No |
 | Instagram, Facebook, TikTok | `social.*` | No |
 | Razón social y RUT (pie de página) | `legalName`, `rut` | No |
-| Google Analytics y Search Console | `analytics.*` | No |
+| Google Search Console, Bing y Google Analytics | `analytics.*` | Muy recomendado |
 | **Fotografías reales de trabajos** | `src/content/images.ts` | Muy recomendado |
 | Historia real de la empresa | `ownerStory` en `src/components/sections/about.tsx` | No |
 
@@ -42,7 +42,9 @@ npm run verificar
 - Mientras falte `whatsappNumber`, los botones de WhatsApp llevan al formulario de cotización (nunca se genera un enlace inválido) y el formulario avisa que el número todavía no está configurado.
 - Si falta `siteUrl`, `robots.txt` pide a los buscadores no indexar el sitio y una publicación en **producción** en Vercel o Netlify **falla a propósito**.
 
-Hoy `siteUrl` apunta a la dirección gratuita de Vercel (`https://cristalte-web-vano6.vercel.app`). Al comprar un dominio propio, cámbialo ahí.
+- Si `siteUrl` es una dirección de Vercel protegida (`…-vano6.vercel.app` o `…-git-…`), la publicación en producción también falla: esas direcciones piden iniciar sesión y Google no puede verlas.
+
+Hoy `siteUrl` apunta a `https://cristalte-web.vercel.app`, la dirección gratuita y pública del proyecto. Al comprar un dominio propio, sigue la sección "Dominio propio".
 
 ---
 
@@ -86,7 +88,7 @@ Los mensajes prearmados de WhatsApp están en `src/lib/whatsapp.ts` (general, po
 ### Textos
 | Qué | Archivo |
 |---|---|
-| Servicios (tarjetas y páginas `/servicios/...`) | `src/content/services.ts` |
+| Servicios (tarjetas y páginas `/ventanas-de-aluminio/`, etc.) | `src/content/services.ts` |
 | Galería de proyectos | `src/content/projects.ts` |
 | Preguntas frecuentes | `src/content/faq.ts` |
 | Portada | `src/components/sections/hero.tsx` |
@@ -102,7 +104,7 @@ Para usar fotos reales:
 1. Optimiza la foto: formato `.webp` o `.jpg`, unos 1600 px de ancho, idealmente bajo 300 KB (puedes usar [squoosh.app](https://squoosh.app)).
 2. Cópiala en `public/proyectos/` (ej. `public/proyectos/terraza-01.webp`).
 3. En `src/content/images.ts` cambia `src` por `"/proyectos/terraza-01.webp"`, escribe un `alt` descriptivo, pon `demo: false` y borra `credit`.
-4. Para sumar un trabajo a la galería, agrega un bloque en `src/content/projects.ts` con la descripción real y, si quieres, `location`.
+4. Para sumar un trabajo real a la galería, copia la plantilla que está al inicio de `src/content/projects.ts`: necesidad, solución, material, foto del antes (opcional) y comuna (solo con permiso del cliente). Se enlaza solo con su página de servicio según la categoría.
 
 Cuando ya no queden imágenes con `demo: true`, las etiquetas “Imagen referencial” y la nota de la galería desaparecen solas.
 
@@ -137,10 +139,36 @@ Los SVG son vectoriales (el texto está convertido a trazos). Se generan con `np
 1. En tu computador ejecuta `CRISTALTE_PUBLICAR=1 npm run build` (este modo falla si faltan datos obligatorios).
 2. Sube **el contenido** de la carpeta `out/` a `public_html` con el administrador de archivos o FTP.
 
-### Después de publicar
-- **Google Search Console:** agrega la propiedad con tu dominio, copia el código de verificación (método “etiqueta HTML”, solo el valor de `content`) en `analytics.googleSiteVerification`, publica y verifica. Luego envía `https://tudominio.cl/sitemap.xml`.
-- **Google Analytics 4:** crea una propiedad y pega el ID `G-XXXXXXXXXX` en `analytics.googleAnalyticsId`.
-- **Google Business Profile:** si atienden en una comuna confirmada, crear la ficha de empresa ayuda mucho en búsquedas locales.
+### Protección de Vercel (importante)
+El proyecto tiene activada "Vercel Authentication" para todas las direcciones salvo la principal. Por eso `cristalte-web.vercel.app` es pública, pero `cristalte-web-vano6.vercel.app` y las direcciones de rama (`…-git-…`) piden iniciar sesión. Comparte y usa siempre la dirección pública o el dominio propio.
+
+### Dominio propio
+1. Compra el dominio `.cl` en [NIC Chile](https://www.nic.cl).
+2. En Vercel → proyecto `cristalte-web` → **Settings → Domains** agrega `cristalte.cl` y `www.cristalte.cl`. Elige una como principal y deja que la otra redirija (308) a ella.
+3. Copia los registros DNS que indica Vercel en NIC Chile y espera a que Vercel muestre el certificado HTTPS activo.
+4. En Vercel agrega también `cristalte-web.vercel.app` como redirección hacia el dominio nuevo, para que Google traslade lo que ya tenga indexado.
+5. Cambia `siteUrl` en `src/config/site.ts` (o la variable `NEXT_PUBLIC_SITE_URL` en Vercel) por el dominio principal, por ejemplo `https://www.cristalte.cl`, y vuelve a publicar.
+6. Revisa `https://tudominio.cl/robots.txt` y `https://tudominio.cl/sitemap.xml`: todas las direcciones deben usar el dominio nuevo.
+
+### Google Search Console y Bing
+1. En [Search Console](https://search.google.com/search-console) agrega una propiedad de tipo **Prefijo de URL** con la dirección exacta de `siteUrl` (o de tipo **Dominio** si ya tienes dominio propio, verificando por DNS).
+2. Método "Etiqueta HTML": copia solo el valor de `content` en `analytics.googleSiteVerification`, publica y presiona **Verificar**.
+3. En **Sitemaps** envía `sitemap.xml`.
+4. En **Inspección de URLs** revisa la portada y cada página de servicio y solicita la indexación.
+5. En [Bing Webmaster Tools](https://www.bing.com/webmasters) puedes importar el sitio desde Search Console, o pegar el código `msvalidate.01` en `analytics.bingSiteVerification`.
+
+### Google Analytics 4 (opcional)
+Crea una propiedad y pega el ID `G-XXXXXXXXXX` en `analytics.googleAnalyticsId`. El sitio muestra un aviso y **solo carga Analytics si el visitante acepta**. Eventos que se registran:
+
+| Evento | Cuándo | Parámetros |
+|---|---|---|
+| `whatsapp_click` | Clic en un botón de WhatsApp (con número configurado) | `ubicacion` (ej. `servicio:ventanas-de-aluminio:inicio`, `tarjeta:shower-doors`, `flotante`), `pagina` |
+| `generate_lead` | Formulario completo que abre WhatsApp | `method`, `service` |
+
+En GA4 marca `generate_lead` y `whatsapp_click` como **eventos clave** para verlos como conversiones.
+
+### URLs anteriores
+Las páginas de servicio pasaron de `/servicios/<nombre>/` a `/<nombre>/`. `vercel.json` redirige las URLs anteriores con 301. Si cambias un `slug`, agrega la redirección correspondiente.
 
 ---
 
@@ -148,14 +176,15 @@ Los SVG son vectoriales (el texto está convertido a trazos). Se generan con `np
 
 - Encabezado fijo con menú móvil y botón “Cotizar por WhatsApp”.
 - Portada con fotografía, mensaje principal y dos llamados a la acción.
-- 8 servicios con tarjeta, botón de WhatsApp con mensaje propio y página individual con URL descriptiva (`/servicios/cerramientos-de-terrazas/`, etc.).
+- 8 servicios con tarjeta, botón de WhatsApp con mensaje propio y página individual con URL descriptiva (`/cerramientos-de-terrazas/`, etc.): beneficios, usos, materiales y opciones, preguntas frecuentes, ideas de la galería, formulario con el servicio ya elegido y servicios relacionados.
+- Páginas de proyectos, nosotros, contacto y preguntas frecuentes.
 - “Detalles que marcan la diferencia” solo con beneficios que la empresa puede respaldar.
 - Galería filtrable por categoría (sin recargar) con vista ampliada, navegación con teclado y botón “Consultar un proyecto similar”.
 - Sección “¿Tienes un proyecto en mente?”.
 - Formulario de cotización validado que arma el mensaje y abre WhatsApp, avisando antes que se abrirá WhatsApp. No guarda datos ni simula envíos.
 - Nosotros, preguntas frecuentes, contacto y pie de página con aviso de privacidad.
 - Botón flotante de WhatsApp en móvil y escritorio.
-- SEO: títulos y descripciones únicas, un H1 por página, Open Graph, canonical, `sitemap.xml`, `robots.txt`, JSON-LD `LocalBusiness`, `FAQPage`, `Service` y migas de pan (solo con datos reales).
+- SEO: títulos y descripciones únicas, un H1 por página, Open Graph, canonical, `sitemap.xml`, `robots.txt`, JSON-LD `Organization` (o `HomeAndConstructionBusiness` cuando haya comuna confirmada), `WebSite`, `Service`, `FAQPage` y migas de pan (solo con datos reales).
 - Accesibilidad: textos alternativos, navegación por teclado, enlace “Saltar al contenido”, contraste AA en textos y botones.
 - Rendimiento: sitio estático, sin librerías pesadas, fotos en formato moderno y tamaño adecuado (WebP/AVIF desde el CDN), carga diferida de imágenes secundarias y dimensiones reservadas para evitar saltos.
 
@@ -166,15 +195,16 @@ Un enlace de WhatsApp no permite adjuntar archivos, por eso el formulario indica
 
 ## 6. Pruebas realizadas
 
-- `npm run build`: compila sin errores (17 páginas estáticas).
+- `npm run build`: compila sin errores (21 páginas estáticas).
 - `npm run lint` y TypeScript: sin errores.
-- `npm test`: 43 pruebas en escritorio (1366 px) y móvil (Pixel 7):
+- `npm test`: pruebas en escritorio (1366 px) y móvil (Pixel 7):
   - Generación y codificación de enlaces de WhatsApp (general, cada servicio, formulario con tildes, ñ y símbolos).
   - Sin número configurado no se genera ningún enlace `wa.me`; todos los botones llevan al formulario.
   - Validación del formulario, mensajes de error y foco en el primer campo con error.
   - Filtros de la galería, vista ampliada, flechas del teclado y cierre con Escape.
   - Menú móvil, sin desbordamiento horizontal.
-  - Un solo H1, títulos y descripciones de cada página de servicio, JSON-LD, Open Graph y canonical.
+  - Un solo H1, títulos, descripciones y canonical de cada página; JSON-LD y Open Graph.
+  - Redirecciones 301 desde las URLs anteriores `/servicios/...`.
   - Todas las imágenes con texto alternativo; enlaces internos responden 200.
   - `sitemap.xml` y `robots.txt`.
   - Sin errores de JavaScript en la consola.

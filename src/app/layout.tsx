@@ -1,11 +1,11 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
-import Script from "next/script";
 import { getSiteUrl, siteConfig } from "@/config/site";
-import { defaultDescription } from "@/lib/seo";
+import { businessJsonLd, defaultDescription, defaultTitle, jsonLdScript, websiteJsonLd } from "@/lib/seo";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { WhatsAppFloat } from "@/components/whatsapp-float";
+import { Analytics } from "@/components/analytics";
 import "./globals.css";
 
 // Manrope (licencia SIL OFL) incluida en el proyecto: no depende de servicios externos.
@@ -21,42 +21,31 @@ const manrope = localFont({
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
   title: {
-    default: "CRISTALTE | Aluminio, vidrio y PVC a medida",
+    default: defaultTitle,
     template: "%s | CRISTALTE",
   },
   description: defaultDescription,
   applicationName: siteConfig.name,
-  keywords: [
-    "ventanas de aluminio",
-    "ventanas de PVC",
-    "cerramientos de terrazas",
-    "shower doors",
-    "mamparas de baño",
-    "puertas de aluminio y vidrio",
-    "espejos a medida",
-    "barandas de vidrio",
-    "trabajos en aluminio y vidrio",
-    "instalación de ventanas",
-  ],
-  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     locale: "es_CL",
     siteName: siteConfig.name,
-    title: "CRISTALTE | Aluminio, vidrio y PVC a medida",
+    title: defaultTitle,
     description: defaultDescription,
-    url: "/",
     images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "CRISTALTE: aluminio, vidrio y diseño" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "CRISTALTE | Aluminio, vidrio y PVC a medida",
+    title: defaultTitle,
     description: defaultDescription,
     images: ["/og-image.png"],
   },
-  verification: siteConfig.analytics.googleSiteVerification
-    ? { google: siteConfig.analytics.googleSiteVerification }
-    : undefined,
+  verification: {
+    ...(siteConfig.analytics.googleSiteVerification ? { google: siteConfig.analytics.googleSiteVerification } : {}),
+    ...(siteConfig.analytics.bingSiteVerification
+      ? { other: { "msvalidate.01": siteConfig.analytics.bingSiteVerification } }
+      : {}),
+  },
 };
 
 export const viewport: Viewport = {
@@ -70,20 +59,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="es-CL" className={`${manrope.variable} antialiased`}>
       <body className="flex min-h-svh flex-col font-sans">
+        {/* Datos de la empresa y del sitio en todas las páginas: los servicios los referencian por @id. */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript([businessJsonLd(), websiteJsonLd()])} />
         <SiteHeader />
         <main id="contenido" className="flex-1">
           {children}
         </main>
         <SiteFooter />
         <WhatsAppFloat />
-        {gaId && (
-          <>
-            <Script src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} strategy="afterInteractive" />
-            <Script id="ga4" strategy="afterInteractive">
-              {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${gaId}');`}
-            </Script>
-          </>
-        )}
+        {gaId && <Analytics gaId={gaId} />}
       </body>
     </html>
   );

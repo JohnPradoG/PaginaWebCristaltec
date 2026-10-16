@@ -16,6 +16,13 @@ if (!siteConfig.siteUrl) {
   if (isProductionDeploy) throw new Error(`[CRISTALTE] ${message} Complétalo antes de publicar en producción.`);
   console.warn(`\n⚠️  [CRISTALTE] ${message}\n`);
 }
+// Las direcciones de Vercel con el nombre del equipo (…-vano6.vercel.app) o de
+// una rama (…-git-…) piden iniciar sesión: Google no puede leerlas.
+if (/-git-|-vano6\.vercel\.app/.test(siteConfig.siteUrl)) {
+  const message = `siteUrl (${siteConfig.siteUrl}) es una dirección protegida de Vercel que Google no puede ver.`;
+  if (isProductionDeploy) throw new Error(`[CRISTALTE] ${message} Usa https://cristalte-web.vercel.app o el dominio propio.`);
+  console.warn(`\n⚠️  [CRISTALTE] ${message}\n`);
+}
 if (!isWhatsAppConfigured()) {
   console.warn(
     "\n⚠️  [CRISTALTE] Falta whatsappNumber en src/config/site.ts: los botones de WhatsApp llevan al formulario.\n",
@@ -26,7 +33,7 @@ const nextConfig: NextConfig = {
   // Sitio estático: `npm run build` genera la carpeta `out/`, que se puede
   // publicar en Vercel, Netlify, Cloudflare Pages o cualquier hosting con cPanel.
   output: "export",
-  // Genera /servicios/ventanas-de-aluminio/index.html (compatible con Apache/cPanel).
+  // Genera /ventanas-de-aluminio/index.html (compatible con Apache/cPanel).
   trailingSlash: true,
   images: {
     loader: "custom",

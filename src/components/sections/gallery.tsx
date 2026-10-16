@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
-import { projectCategories, projects, type ProjectCategory } from "@/content/projects";
+import Link from "next/link";
+import { categoryService, projectCategories, projects, type ProjectCategory } from "@/content/projects";
 import { whatsappMessages } from "@/lib/whatsapp";
 import { WhatsAppLink } from "../whatsapp-link";
 import { ChevronLeftIcon, ChevronRightIcon, CloseIcon, PinIcon, PlusIcon, WhatsAppIcon } from "../icons";
@@ -11,16 +12,24 @@ import { btn, Container, DemoBadge, SectionHeading } from "../ui";
 type Filter = "Todos" | ProjectCategory;
 const filters: Filter[] = ["Todos", ...projectCategories];
 
-export function GallerySection() {
+type GalleryProps = {
+  /** Cantidad máxima de proyectos visibles (portada). Sin límite en /proyectos/. */
+  limit?: number;
+  /** "h1" cuando la galería es la página principal (/proyectos/). */
+  headingLevel?: "h1" | "h2";
+  title?: string;
+};
+
+export function GallerySection({ limit, headingLevel = "h2", title = "Ideas para tu próximo proyecto" }: GalleryProps = {}) {
   const [filter, setFilter] = useState<Filter>("Todos");
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
 
-  const visible = useMemo(
-    () => (filter === "Todos" ? projects : projects.filter((p) => p.category === filter)),
-    [filter],
-  );
+  const visible = useMemo(() => {
+    const list = filter === "Todos" ? projects : projects.filter((p) => p.category === filter);
+    return limit ? list.slice(0, limit) : list;
+  }, [filter, limit]);
   const current = openIndex !== null ? visible[openIndex] : null;
   const hasDemo = visible.some((p) => p.image.demo);
 
@@ -60,8 +69,9 @@ export function GallerySection() {
         <SectionHeading
           id="proyectos-title"
           eyebrow="Proyectos"
-          title="Ideas para tu próximo proyecto"
+          title={title}
           intro="Explora por categoría y consulta por un trabajo similar para tu espacio."
+          as={headingLevel}
         />
 
         <div role="group" aria-label="Filtrar proyectos por categoría" className="mt-10 -mx-4 overflow-x-auto px-4 pb-2">
@@ -120,6 +130,14 @@ export function GallerySection() {
           ))}
         </ul>
 
+        {limit && (
+          <div className="mt-8 text-center">
+            <Link href="/proyectos/" className={btn("outlineDark")}>
+              Ver todos los proyectos
+            </Link>
+          </div>
+        )}
+
         {hasDemo && (
           <p className="mt-6 text-center text-sm text-ink-muted">
             Las fotografías marcadas como “Imagen referencial” son ejemplos ilustrativos de terceros y no corresponden a
@@ -174,6 +192,42 @@ export function GallerySection() {
                 <p className="text-xs font-bold tracking-wider text-brand-light uppercase">{current.category}</p>
                 <h3 className="mt-1 text-xl font-extrabold">{current.title}</h3>
                 <p className="mt-2 max-w-xl text-white/85">{current.description}</p>
+                {(current.need || current.solution || current.material) && (
+                  <dl className="mt-3 max-w-xl space-y-1.5 text-sm text-white/85">
+                    {current.need && (
+                      <div>
+                        <dt className="inline font-bold text-white">Necesidad: </dt>
+                        <dd className="inline">{current.need}</dd>
+                      </div>
+                    )}
+                    {current.solution && (
+                      <div>
+                        <dt className="inline font-bold text-white">Solución: </dt>
+                        <dd className="inline">{current.solution}</dd>
+                      </div>
+                    )}
+                    {current.material && (
+                      <div>
+                        <dt className="inline font-bold text-white">Material: </dt>
+                        <dd className="inline">{current.material}</dd>
+                      </div>
+                    )}
+                  </dl>
+                )}
+                {current.before && (
+                  <figure className="mt-3 w-40">
+                    <div className="relative aspect-[4/3] overflow-hidden rounded-lg">
+                      <Image src={current.before.src} alt={current.before.alt} fill sizes="160px" className="object-cover" />
+                    </div>
+                    <figcaption className="mt-1 text-xs text-white/75">Antes</figcaption>
+                  </figure>
+                )}
+                <Link
+                  href={`/${categoryService[current.category]}/`}
+                  className="mt-3 inline-block text-sm font-bold text-brand-light underline"
+                >
+                  Ver servicio de {current.category.toLowerCase() === "pvc" ? "PVC" : current.category.toLowerCase()}
+                </Link>
                 {current.location && (
                   <p className="mt-2 flex items-center gap-1.5 text-sm text-white/75">
                     <PinIcon className="size-4" /> {current.location}
@@ -182,6 +236,7 @@ export function GallerySection() {
               </div>
               <WhatsAppLink
                 message={whatsappMessages.similarProject(current.title, current.category)}
+                trackLabel={`proyecto:${current.id}`}
                 className={btn("whatsapp", "shrink-0")}
               >
                 <WhatsAppIcon className="size-5" />

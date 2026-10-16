@@ -73,7 +73,7 @@ export function SiteHeader() {
 
           <div className="flex items-center gap-2">
             <div className="hidden sm:block">
-              <WhatsAppLink message={whatsappMessages.general()} className={btn("whatsapp", "px-4")}>
+              <WhatsAppLink trackLabel="encabezado" message={whatsappMessages.general()} className={btn("whatsapp", "px-4")}>
                 <WhatsAppIcon className="size-5" />
                 Cotizar por WhatsApp
               </WhatsAppLink>
@@ -112,7 +112,7 @@ export function SiteHeader() {
               ))}
             </ul>
             <div className="px-7 pb-8">
-              <WhatsAppLink message={whatsappMessages.general()} className={btn("whatsapp", "w-full")}>
+              <WhatsAppLink trackLabel="encabezado" message={whatsappMessages.general()} className={btn("whatsapp", "w-full")}>
                 <WhatsAppIcon className="size-5" />
                 Cotizar por WhatsApp
               </WhatsAppLink>
