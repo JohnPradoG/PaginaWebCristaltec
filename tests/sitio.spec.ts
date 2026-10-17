@@ -28,7 +28,7 @@ test("portada: estructura, encabezados y metadatos", async ({ page }) => {
   const types = jsonLd.flatMap((t) => [JSON.parse(t)].flat().map((d) => d["@type"]));
   // Con dirección confirmada la empresa se declara como negocio local.
   expect(types).toEqual(expect.arrayContaining(["HomeAndConstructionBusiness", "WebSite"]));
-  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://cristalte-web.vercel.app/");
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://cristaltecsantiago.cl/");
   await expect(page.getByRole("heading", { name: "Detalles que marcan la diferencia" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "¿Tienes un proyecto en mente?" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Soluciones pensadas para tus espacios" })).toBeVisible();
@@ -116,7 +116,7 @@ for (const s of services) {
     await expect(page.locator("h1")).toHaveCount(1);
     await expect(page.locator("h1")).toHaveText(s.h1);
     await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", s.seo.description);
-    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", `https://cristalte-web.vercel.app${servicePath(s.slug)}`);
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", `https://cristaltecsantiago.cl${servicePath(s.slug)}`);
     // Formulario en la misma página, con el servicio elegido.
     await expect(page.locator("#cotizar select[name=service]")).toHaveValue(s.name);
     // Los botones de WhatsApp sin número llevan al formulario de esta misma página.
@@ -140,7 +140,7 @@ for (const [path, h1] of [
     await page.goto(path);
     await expect(page.locator("h1")).toHaveCount(1);
     await expect(page.locator("h1")).toHaveText(h1);
-    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", `https://cristalte-web.vercel.app${path}`);
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", `https://cristaltecsantiago.cl${path}`);
     expect(errors).toEqual([]);
   });
 }
@@ -148,16 +148,27 @@ for (const [path, h1] of [
 test("redirecciones 301 desde las URLs anteriores en vercel.json", async () => {
   const { readFileSync } = await import("node:fs");
   const config = JSON.parse(readFileSync("vercel.json", "utf8")) as {
-    redirects: { source: string; destination: string; permanent: boolean }[];
+    redirects: { source: string; destination: string; permanent: boolean; has?: unknown }[];
   };
   const validTargets = ["/", ...services.map((s) => servicePath(s.slug))];
   for (const [from, to] of Object.entries(legacyRedirects)) {
     const source = from.endsWith("/") ? from : `${from}/`;
-    const rule = config.redirects.find((r) => r.source === source);
+    const rule = config.redirects.find((r) => r.source === source && !r.has);
     expect(rule?.destination, source).toBe(to);
     expect(rule?.permanent).toBe(true);
     expect(validTargets).toContain(to);
   }
+});
+
+test("la dirección gratuita de Vercel redirige al dominio propio", async () => {
+  const { readFileSync } = await import("node:fs");
+  const config = JSON.parse(readFileSync("vercel.json", "utf8")) as {
+    redirects: { source: string; destination: string; permanent: boolean; has?: { type: string; value: string }[] }[];
+  };
+  const rule = config.redirects[0];
+  expect(rule.has).toEqual([{ type: "host", value: "cristalte-web.vercel.app" }]);
+  expect(rule.destination).toBe("https://cristaltecsantiago.cl/:path*");
+  expect(rule.permanent).toBe(true);
 });
 
 test("todos los enlaces internos responden", async ({ page, request }) => {
@@ -178,13 +189,13 @@ test("todos los enlaces internos responden", async ({ page, request }) => {
 
 test("sitemap y robots", async ({ request }) => {
   const sitemap = await (await request.get("/sitemap.xml")).text();
-  for (const s of services) expect(sitemap).toContain(`https://cristalte-web.vercel.app${servicePath(s.slug)}`);
+  for (const s of services) expect(sitemap).toContain(`https://cristaltecsantiago.cl${servicePath(s.slug)}`);
   expect(sitemap).not.toContain("/servicios/");
   expect(sitemap).not.toContain("vano6");
   const robots = await (await request.get("/robots.txt")).text();
   expect(robots).toMatch(/User-Agent: \*/i);
   expect(robots).toMatch(/Allow: \//);
-  expect(robots).toContain("Sitemap: https://cristalte-web.vercel.app/sitemap.xml");
+  expect(robots).toContain("Sitemap: https://cristaltecsantiago.cl/sitemap.xml");
 });
 
 test("precios referenciales: tabla en portada y filtrada por servicio", async ({ page }) => {

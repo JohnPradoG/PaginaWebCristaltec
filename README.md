@@ -15,7 +15,7 @@ El sitio funciona sin estos datos, pero **no se debe publicar en producción** h
 | Dato | Campo | Obligatorio |
 |---|---|---|
 | Número de WhatsApp (formato `569XXXXXXXX`, solo dígitos) | `whatsappNumber` | **Sí** |
-| Dominio (hoy: `https://cristalte-web.vercel.app`, la única dirección pública de Vercel) | `siteUrl` o variable `NEXT_PUBLIC_SITE_URL` | **Sí** (ya configurado) |
+| Dominio (`https://cristaltecsantiago.cl`; `cristalte-web.vercel.app` redirige a él) | `siteUrl` o variable `NEXT_PUBLIC_SITE_URL` | **Sí** (ya configurado) |
 | Teléfono para llamadas | `contact.phone` | No |
 | Correo | `contact.email` | No |
 | Dirección del taller o local | `contact.address` | No |
@@ -45,7 +45,7 @@ npm run verificar
 
 - Si `siteUrl` es una dirección de Vercel protegida (`…-vano6.vercel.app` o `…-git-…`), la publicación en producción también falla: esas direcciones piden iniciar sesión y Google no puede verlas.
 
-Hoy `siteUrl` apunta a `https://cristalte-web.vercel.app`, la dirección gratuita y pública del proyecto. Al comprar un dominio propio, sigue la sección "Dominio propio".
+`siteUrl` apunta al dominio propio `https://cristaltecsantiago.cl`.
 
 ---
 
@@ -145,12 +145,13 @@ Los SVG son vectoriales (el texto está convertido a trazos). Se generan con `np
 El proyecto tiene activada "Vercel Authentication" para todas las direcciones salvo la principal. Por eso `cristalte-web.vercel.app` es pública, pero `cristalte-web-vano6.vercel.app` y las direcciones de rama (`…-git-…`) piden iniciar sesión. Comparte y usa siempre la dirección pública o el dominio propio.
 
 ### Dominio propio
-1. Compra el dominio `.cl` en [NIC Chile](https://www.nic.cl).
-2. En Vercel → proyecto `cristalte-web` → **Settings → Domains** agrega `cristalte.cl` y `www.cristalte.cl`. Elige una como principal y deja que la otra redirija (308) a ella.
-3. Copia los registros DNS que indica Vercel en NIC Chile y espera a que Vercel muestre el certificado HTTPS activo.
-4. En Vercel agrega también `cristalte-web.vercel.app` como redirección hacia el dominio nuevo, para que Google traslade lo que ya tenga indexado.
-5. Cambia `siteUrl` en `src/config/site.ts` (o la variable `NEXT_PUBLIC_SITE_URL` en Vercel) por el dominio principal, por ejemplo `https://www.cristalte.cl`, y vuelve a publicar.
-6. Revisa `https://tudominio.cl/robots.txt` y `https://tudominio.cl/sitemap.xml`: todas las direcciones deben usar el dominio nuevo.
+Dominio: `cristaltecsantiago.cl` (NIC Chile). Configuración:
+1. En Vercel → proyecto `cristalte-web` → Domains están `cristaltecsantiago.cl` (principal) y `www.cristaltecsantiago.cl` (redirige 308 al principal).
+2. En NIC Chile → Mis dominios → servidores DNS: `ns1.vercel-dns.com` y `ns2.vercel-dns.com`. Vercel crea los registros y el certificado HTTPS solo.
+3. `vercel.json` redirige con 301 todo lo que llegue a `cristalte-web.vercel.app` hacia el dominio propio.
+4. `siteUrl` en `src/config/site.ts` usa `https://cristaltecsantiago.cl` (canonical, sitemap, robots y JSON-LD).
+5. Agrega el dominio en Google Search Console (propiedad de dominio, verificación por DNS en Vercel) y envía `https://cristaltecsantiago.cl/sitemap.xml`.
+6. Revisa `https://cristaltecsantiago.cl/robots.txt` y `https://cristaltecsantiago.cl/sitemap.xml`: todas las direcciones deben usar el dominio nuevo.
 
 ### Google Search Console y Bing
 1. En [Search Console](https://search.google.com/search-console) agrega una propiedad de tipo **Prefijo de URL** con la dirección exacta de `siteUrl` (o de tipo **Dominio** si ya tienes dominio propio, verificando por DNS).
