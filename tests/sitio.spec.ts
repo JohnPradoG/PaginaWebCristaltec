@@ -44,17 +44,30 @@ test("todas las imágenes tienen texto alternativo y las referenciales están ma
   await expect(page.getByText("Imagen referencial").first()).toBeVisible();
 });
 
-test("modo pendiente: los botones de WhatsApp llevan al formulario y no a enlaces inválidos", async ({ page }) => {
+test("los botones de WhatsApp abren el número principal, sin enlaces pendientes", async ({ page }) => {
   await page.goto("/");
-  await expect(page.locator('a[href*="wa.me"]')).toHaveCount(0);
-  const pending = page.locator('a[data-whatsapp="pending"]');
-  expect(await pending.count()).toBeGreaterThan(8);
-  for (const href of await pending.evaluateAll((els) => els.map((e) => e.getAttribute("href")))) {
-    expect(href).toBe("/#cotizar");
+  await expect(page.locator('a[data-whatsapp="pending"]')).toHaveCount(0);
+  const links = page.locator('a[data-whatsapp="ready"]');
+  expect(await links.count()).toBeGreaterThan(8);
+  for (const href of await links.evaluateAll((els) => els.map((e) => e.getAttribute("href")))) {
+    expect(href).toMatch(/^https:\/\/wa\.me\/56945165347\?text=/);
   }
 });
 
-test("formulario: valida campos obligatorios y avisa si falta el número", async ({ page }) => {
+/** Captura las URLs que el sitio intenta abrir con window.open, sin abrir ventanas. */
+async function captureWindowOpen(page: import("@playwright/test").Page) {
+  await page.addInitScript(() => {
+    (window as unknown as { __opened: string[] }).__opened = [];
+    window.open = ((url?: string | URL) => {
+      (window as unknown as { __opened: string[] }).__opened.push(String(url));
+      return {} as Window;
+    }) as typeof window.open;
+  });
+  return () => page.evaluate(() => (window as unknown as { __opened: string[] }).__opened);
+}
+
+test("formulario: valida campos obligatorios y abre WhatsApp con los datos", async ({ page }) => {
+  const opened = await captureWindowOpen(page);
   await page.goto("/#cotizar");
   const form = page.locator("#cotizar form");
   await form.getByRole("button", { name: "Continuar en WhatsApp" }).click();
@@ -69,7 +82,11 @@ test("formulario: valida campos obligatorios y avisa si falta el número", async
   await form.getByLabel(/^Descripción del proyecto/).fill("Cerrar terraza de 3 x 2,4 m en piso 5.");
   await form.getByRole("button", { name: "Continuar en WhatsApp" }).click();
   await expect(form.getByText("Escribe tu nombre.")).toHaveCount(0);
-  await expect(form.getByText(/aún no está configurado/)).toBeVisible();
+  const [url] = await opened();
+  expect(url).toMatch(/^https:\/\/wa\.me\/56945165347\?text=/);
+  const text = new URL(url).searchParams.get("text")!;
+  expect(text).toContain("Ana Pérez");
+  expect(text).toContain("Cerramientos de terrazas");
 });
 
 test("galería: filtra por categoría y abre la vista ampliada", async ({ page }) => {
@@ -119,10 +136,11 @@ for (const s of services) {
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", `https://cristaltecsantiago.cl${servicePath(s.slug)}`);
     // Formulario en la misma página, con el servicio elegido.
     await expect(page.locator("#cotizar select[name=service]")).toHaveValue(s.name);
-    // Los botones de WhatsApp sin número llevan al formulario de esta misma página.
-    for (const href of await page.locator('a[data-whatsapp="pending"]').evaluateAll((els) => els.map((e) => e.getAttribute("href")))) {
-      expect(["#cotizar", "/#cotizar"]).toContain(href);
-    }
+    // Los botones de WhatsApp de la página abren el mensaje de este servicio.
+    const texts = await page
+      .locator('main a[data-whatsapp="ready"]')
+      .evaluateAll((els) => els.map((e) => new URL(e.getAttribute("href")!).searchParams.get("text")));
+    expect(texts).toContain(s.whatsappMessage);
     for (const q of s.faqs) await expect(page.getByRole("heading", { name: q.question })).toHaveCount(1);
     expect(errors).toEqual([]);
   });
@@ -218,7 +236,8 @@ test("precios referenciales: tabla en portada y filtrada por servicio", async ({
   }
 });
 
-test("formulario comercial: valida y no simula un envío sin destino", async ({ page }) => {
+test("formulario comercial: valida y abre WhatsApp sin simular un envío", async ({ page }) => {
+  const opened = await captureWindowOpen(page);
   await page.goto("/proyectos-comerciales/");
   const form = page.locator("form").first();
   const submit = form.locator('button[type="submit"]');
@@ -234,6 +253,8 @@ test("formulario comercial: valida y no simula un envío sin destino", async ({ 
   await form.getByLabel("Ventanas de aluminio").check();
   await form.getByLabel(/^Descripción/).fill("Edificio de 12 pisos, 80 ventanas de aluminio con termopanel.");
   await submit.click();
-  await expect(page.getByText(/no tiene un destino configurado, por lo que la solicitud no se envió/)).toBeVisible();
+  await expect.poll(async () => (await opened()).length).toBe(1);
+  const text = new URL((await opened())[0]).searchParams.get("text")!;
+  expect(text).toContain("Constructora Ejemplo");
   await expect(page.getByText(/enviada|recibimos/i)).toHaveCount(0);
 });

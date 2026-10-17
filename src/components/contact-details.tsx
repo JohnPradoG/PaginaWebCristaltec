@@ -41,6 +41,23 @@ export function getContactItems(): Item[] {
       ),
     });
   }
+  const second = siteConfig.whatsappSecondaryNumber?.trim();
+  if (wa && second && /^[1-9]\d{7,14}$/.test(second)) {
+    items.push({
+      icon: WhatsAppIcon,
+      label: "WhatsApp",
+      content: (
+        <a
+          href={`https://wa.me/${second}?text=${encodeURIComponent(whatsappMessages.general())}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:underline"
+        >
+          {formatChileanNumber(second)}
+        </a>
+      ),
+    });
+  }
   if (c.phone) {
     items.push({
       icon: PhoneIcon,

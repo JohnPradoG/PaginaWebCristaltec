@@ -42,11 +42,13 @@ export const siteConfig = {
    * Formato internacional, solo dígitos, sin "+", espacios ni guiones.
    * En Chile: 56 + 9 + 8 dígitos. Ejemplo de FORMATO (no es un número real): 569XXXXXXXX
    *
-   * PENDIENTE: mientras esté vacío, los botones de WhatsApp llevan al formulario
-   * de cotización en lugar de abrir un enlace inválido, y `npm run verificar`
-   * avisa que falta.
+   * Si se deja vacío, los botones de WhatsApp llevan al formulario de cotización
+   * en lugar de abrir un enlace inválido, y `npm run verificar` avisa que falta.
+   * Número principal confirmado por John (2026-10-17): lo usan todos los botones.
    */
-  whatsappNumber: "",
+  whatsappNumber: "56945165347",
+  /** Segundo WhatsApp confirmado por John (2026-10-17). Solo se muestra en Contacto. */
+  whatsappSecondaryNumber: "56994877066" as string | null,
 
   contact: {
     /** Teléfono para llamadas, tal como quieres que se lea. Ej.: "+56 9 XXXX XXXX". */
