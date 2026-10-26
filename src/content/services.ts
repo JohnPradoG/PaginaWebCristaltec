@@ -620,7 +620,7 @@ export const services: Service[] = [
     seo: {
       title: "Reparación de ventanas y puertas",
       description:
-        "Reparación y mantenimiento de ventanas, puertas, shower doors y mamparas de aluminio, PVC y vidrio: carros, burletes, cierres, vidrios rotos y termopanel empañado.",
+        "Reparación de ventanas, puertas, shower doors y mamparas de aluminio, PVC y vidrio: carros, burletes, cierres, vidrios rotos y termopanel empañado.",
     },
   },
 ];

@@ -111,7 +111,7 @@ export function GallerySection({ limit, headingLevel = "h2", title = "Ideas para
                   src={project.image.src}
                   alt={project.image.alt}
                   fill
-                  sizes="(min-width: 1024px) 400px, 50vw"
+                  sizes="(min-width: 1024px) 400px, calc(50vw - 22px)"
                   className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
                 />
                 <span aria-hidden className="absolute inset-0 bg-gradient-to-t from-navy-950/85 via-navy-950/10 to-transparent" />

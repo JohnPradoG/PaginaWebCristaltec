@@ -29,6 +29,6 @@ export const priceList: PriceItem[] = [
     product: "Vitrinas a medida",
     size: "Según medidas y diseño",
     price: "Desde $80.000 CLP",
-    note: "Desde $80.000. El precio final depende de las medidas, el diseño y las características del proyecto.",
+    note: "El precio final depende de las medidas, el diseño y las características del proyecto.",
   },
 ];

@@ -15,7 +15,7 @@ export function ServiceCard({ service, headingLevel = "h3" }: { service: Service
           src={service.image.src}
           alt=""
           fill
-          sizes="(min-width: 1280px) 300px, (min-width: 640px) 50vw, 100vw"
+          sizes="(min-width: 1280px) 300px, (min-width: 640px) calc(50vw - 36px), calc(100vw - 32px)"
           className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
         />
         <span aria-hidden className="absolute inset-0 bg-gradient-to-t from-navy-950/55 via-transparent" />

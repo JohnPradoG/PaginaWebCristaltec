@@ -40,6 +40,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# fotos originales (pesadas; en el repo quedan las versiones optimizadas de public/proyectos/)
+/fotos-originales/
+
 # pruebas
 /test-results/
 /playwright-report/

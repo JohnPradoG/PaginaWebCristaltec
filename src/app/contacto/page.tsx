@@ -6,7 +6,7 @@ import { breadcrumbJsonLd, jsonLdScript, pageMetadata } from "@/lib/seo";
 export const metadata = pageMetadata({
   title: "Contacto y cotización",
   description:
-    "Cotiza ventanas, puertas, shower doors, cerramientos de terrazas, mamparas, vitrinas o reparaciones con CRISTALTEC. Escríbenos por WhatsApp o completa el formulario.",
+    "Cotiza ventanas, puertas, shower doors, cierres de terraza, mamparas, vitrinas o reparaciones en Santiago. Escríbenos por WhatsApp o completa el formulario.",
   path: "/contacto/",
 });
 

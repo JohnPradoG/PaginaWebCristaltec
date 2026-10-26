@@ -60,6 +60,7 @@ npm run build        # genera el sitio estático en out/
 npm run preview      # sirve out/ localmente para revisarlo
 npm run lint         # revisa el código
 npm run verificar    # revisa los datos pendientes
+npm run fotos        # optimiza las fotos de fotos-originales/ para la web
 npm test             # pruebas automáticas (requiere npm run build antes)
 ```
 
@@ -103,9 +104,11 @@ Las fotos actuales son **imágenes de referencia de Unsplash** (licencia libre),
 
 Para usar fotos reales:
 
-1. Optimiza la foto: formato `.webp` o `.jpg`, unos 1600 px de ancho, idealmente bajo 300 KB (puedes usar [squoosh.app](https://squoosh.app)).
-2. Cópiala en `public/proyectos/` (ej. `public/proyectos/terraza-01.webp`).
-3. En `src/content/images.ts` cambia `src` por `"/proyectos/terraza-01.webp"`, escribe un `alt` descriptivo, pon `demo: false` y borra `credit`.
+1. Copia las fotos originales (jpg, png o webp, tal como salen del celular) en la carpeta `fotos-originales/`. El nombre del archivo será su nombre en la web (ej. `terraza-providencia-01.jpg`).
+2. Ejecuta `npm run fotos`. Crea en `public/proyectos/` versiones WebP de 640, 1080 y 1600 px, gira la foto según el celular y borra los datos EXIF (incluida la ubicación GPS).
+3. En `src/content/images.ts` cambia `src` por `"/proyectos/terraza-providencia-01.webp"`, escribe un `alt` descriptivo, pon `demo: false` y borra `credit`.
+
+Cada pantalla descarga la versión más liviana que le sirve. Si falta alguna versión de una foto, `npm run build` se detiene y avisa cuál falta. La carpeta `fotos-originales/` no se sube al repositorio.
 4. Para sumar un trabajo real a la galería, copia la plantilla que está al inicio de `src/content/projects.ts`: necesidad, solución, material, foto del antes (opcional) y comuna (solo con permiso del cliente). Se enlaza solo con su página de servicio según la categoría.
 
 Cuando ya no queden imágenes con `demo: true`, las etiquetas “Imagen referencial” y la nota de la galería desaparecen solas.

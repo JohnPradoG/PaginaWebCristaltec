@@ -223,8 +223,10 @@ test("precios referenciales: tabla en portada y filtrada por servicio", async ({
   await expect(section.locator("tbody tr")).toHaveCount(priceList.length);
   await expect(section.getByText("$255.000 CLP")).toBeVisible();
   await expect(section.getByText("Desde $80.000 CLP")).toBeVisible();
+  // El precio aparece una sola vez: en su columna, no repetido en la nota.
+  await expect(section.getByText(/\$80\.000/)).toHaveCount(1);
   await expect(
-    section.getByText("Desde $80.000. El precio final depende de las medidas, el diseño y las características del proyecto."),
+    section.getByText("El precio final depende de las medidas, el diseño y las características del proyecto."),
   ).toBeVisible();
   await section.getByRole("link", { name: "Solicitar cotización" }).click();
   await expect(page).toHaveURL(/#cotizar$/);

@@ -120,3 +120,6 @@ export const images = {
     credit: { author: "Mia Baker", url: "https://unsplash.com/photos/jjhvyxm34nY" },
   },
 } satisfies Record<string, SiteImage>;
+
+/** true mientras alguna foto venga del CDN de Unsplash (se abre la conexión antes para la portada). */
+export const usesExternalImages = Object.values(images).some((img) => img.src.startsWith("https://images.unsplash.com/"));

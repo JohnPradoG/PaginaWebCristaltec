@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getSiteUrl, isWhatsAppConfigured, siteConfig } from "@/config/site";
 import type { FaqItem } from "@/content/faq-types";
+import { servicePath, services } from "@/content/services";
 
 export const defaultTitle = "Ventanas de aluminio y PVC en Santiago | CRISTALTEC";
 
@@ -87,6 +88,15 @@ export function businessJsonLd() {
     data.areaServed = c.serviceAreas.map((name) => ({ "@type": "City", name }));
   }
   if (c.mapLink) data.hasMap = c.mapLink;
+  // Catálogo con los servicios que tienen página propia en el sitio.
+  data.hasOfferCatalog = {
+    "@type": "OfferCatalog",
+    name: "Servicios de CRISTALTEC",
+    itemListElement: services.map((s) => ({
+      "@type": "Offer",
+      itemOffered: { "@type": "Service", name: s.name, url: absoluteUrl(servicePath(s.slug)) },
+    })),
+  };
   if (sameAs.length > 0) data.sameAs = sameAs;
   return data;
 }

@@ -1,5 +1,8 @@
 import type { NextConfig } from "next";
+import { existsSync } from "node:fs";
 import { isWhatsAppConfigured, siteConfig } from "./src/config/site";
+import { images } from "./src/content/images";
+import { PHOTO_WIDTHS } from "./src/lib/photo-widths.mjs";
 
 // Bloqueo de seguridad: una publicación en PRODUCCIÓN (Vercel, Netlify o
 // CRISTALTEC_PUBLICAR=1) falla si falta el dominio (siteUrl), porque sin él la
@@ -27,6 +30,24 @@ if (!isWhatsAppConfigured()) {
   console.warn(
     "\n⚠️  [CRISTALTEC] Falta whatsappNumber en src/config/site.ts: los botones de WhatsApp llevan al formulario.\n",
   );
+}
+
+// Cada foto propia de /proyectos/ necesita sus versiones por tamaño (npm run fotos).
+// Si falta alguna, el build se detiene en vez de publicar imágenes rotas.
+const missingPhotos = Object.values(images)
+  .map((img) => img.src.match(/^\/proyectos\/([a-z0-9-]+)\.webp$/)?.[1])
+  .filter((name): name is string => Boolean(name))
+  .flatMap((name) => PHOTO_WIDTHS.map((w) => `public/proyectos/${name}-${w}.webp`))
+  .filter((file) => !existsSync(file));
+if (missingPhotos.length > 0) {
+  throw new Error(
+    `[CRISTALTEC] Faltan versiones de fotos: ${missingPhotos.join(", ")}. Copia las originales en fotos-originales/ y ejecuta npm run fotos.`,
+  );
+}
+for (const [key, img] of Object.entries(images)) {
+  if (img.src.startsWith("/") && !/^\/proyectos\/[a-z0-9-]+\.webp$/.test(img.src) && !existsSync(`public${img.src}`)) {
+    throw new Error(`[CRISTALTEC] La imagen "${key}" apunta a ${img.src}, que no existe en public/.`);
+  }
 }
 
 const nextConfig: NextConfig = {

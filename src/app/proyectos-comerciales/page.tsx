@@ -7,7 +7,7 @@ import { breadcrumbJsonLd, jsonLdScript, pageMetadata } from "@/lib/seo";
 export const metadata = pageMetadata({
   title: "Cotización para proyectos comerciales y edificios",
   description:
-    "Solicita cotización de ventanas de aluminio y PVC, termopanel, puertas, mamparas, shower doors y mantenimiento para edificios, oficinas, locales y constructoras.",
+    "Cotización de ventanas de aluminio y PVC, termopanel, puertas, mamparas, shower doors y mantenimiento para edificios, oficinas, locales y constructoras.",
   path: "/proyectos-comerciales/",
 });
 

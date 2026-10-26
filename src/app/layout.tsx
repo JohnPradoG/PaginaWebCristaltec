@@ -1,11 +1,13 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+import { preconnect } from "react-dom";
 import { getSiteUrl, siteConfig } from "@/config/site";
 import { businessJsonLd, defaultDescription, defaultTitle, jsonLdScript, websiteJsonLd } from "@/lib/seo";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { WhatsAppFloat } from "@/components/whatsapp-float";
 import { Analytics } from "@/components/analytics";
+import { usesExternalImages } from "@/content/images";
 import "./globals.css";
 
 // Manrope (licencia SIL OFL) incluida en el proyecto: no depende de servicios externos.
@@ -56,6 +58,8 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   const gaId = siteConfig.analytics.googleAnalyticsId;
+  // Abre antes la conexión al CDN de fotos: la imagen de portada es el elemento más pesado (LCP).
+  if (usesExternalImages) preconnect("https://images.unsplash.com");
   return (
     <html lang="es-CL" className={`${manrope.variable} antialiased`}>
       <body className="flex min-h-svh flex-col font-sans">
