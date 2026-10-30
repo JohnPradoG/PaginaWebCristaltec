@@ -20,7 +20,7 @@ type GalleryProps = {
   title?: string;
 };
 
-export function GallerySection({ limit, headingLevel = "h2", title = "Ideas para tu próximo proyecto" }: GalleryProps = {}) {
+export function GallerySection({ limit, headingLevel = "h2", title = "Nuestros trabajos" }: GalleryProps = {}) {
   const [filter, setFilter] = useState<Filter>("Todos");
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -70,7 +70,7 @@ export function GallerySection({ limit, headingLevel = "h2", title = "Ideas para
           id="proyectos-title"
           eyebrow="Proyectos"
           title={title}
-          intro="Explora por categoría y consulta por un trabajo similar para tu espacio."
+          intro="Trabajos realizados por CRISTALTEC. Explora por categoría y consulta por uno similar para tu espacio."
           as={headingLevel}
         />
 
@@ -104,7 +104,7 @@ export function GallerySection({ limit, headingLevel = "h2", title = "Ideas para
               <button
                 type="button"
                 onClick={(e) => open(index, e.currentTarget)}
-                className="group relative block aspect-[4/3] w-full overflow-hidden rounded-xl bg-navy/10 text-left"
+                className="group relative block aspect-[3/4] w-full overflow-hidden rounded-xl bg-navy/10 text-left"
                 aria-label={`Ampliar: ${project.title}`}
               >
                 <Image
@@ -155,8 +155,8 @@ export function GallerySection({ limit, headingLevel = "h2", title = "Ideas para
       >
         {current && (
           <div className="relative overflow-hidden bg-navy-950 sm:rounded-2xl">
-            <div className="relative aspect-[4/3] w-full sm:aspect-[16/10]">
-              <Image src={current.image.src} alt={current.image.alt} fill sizes="(min-width: 1024px) 1000px, 100vw" className="object-cover" />
+            <div className="relative h-[62dvh] w-full bg-black sm:h-[70dvh]">
+              <Image src={current.image.src} alt={current.image.alt} fill sizes="(min-width: 1024px) 1000px, 100vw" className="object-contain" />
               {current.image.demo && <DemoBadge className="absolute top-3 left-3" />}
               <button
                 type="button"
@@ -222,12 +222,14 @@ export function GallerySection({ limit, headingLevel = "h2", title = "Ideas para
                     <figcaption className="mt-1 text-xs text-white/75">Antes</figcaption>
                   </figure>
                 )}
-                <Link
-                  href={`/${categoryService[current.category]}/`}
-                  className="mt-3 inline-block text-sm font-bold text-brand-light underline"
-                >
-                  Ver servicio de {current.category.toLowerCase() === "pvc" ? "PVC" : current.category.toLowerCase()}
-                </Link>
+                {categoryService[current.category] && (
+                  <Link
+                    href={`/${categoryService[current.category]}/`}
+                    className="mt-3 inline-block text-sm font-bold text-brand-light underline"
+                  >
+                    Ver servicio de {current.category.toLowerCase().replace("pvc", "PVC")}
+                  </Link>
+                )}
                 {current.location && (
                   <p className="mt-2 flex items-center gap-1.5 text-sm text-white/75">
                     <PinIcon className="size-4" /> {current.location}

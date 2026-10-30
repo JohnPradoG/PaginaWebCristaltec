@@ -4,7 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { seoLocation, siteConfig } from "@/config/site";
 import { getService, servicePath, services } from "@/content/services";
-import { projects } from "@/content/projects";
+import { categoryService, projects } from "@/content/projects";
 import { absoluteUrl, breadcrumbJsonLd, faqJsonLd, jsonLdScript, pageMetadata } from "@/lib/seo";
 import { priceList } from "@/content/prices";
 import { PriceSection } from "@/components/sections/prices";
@@ -44,7 +44,7 @@ export default async function ServicePage(props: PageProps<"/[servicio]">) {
   if (!service) notFound();
 
   const path = servicePath(service.slug);
-  const related = service.galleryCategory ? projects.filter((p) => p.category === service.galleryCategory).slice(0, 3) : [];
+  const related = projects.filter((p) => categoryService[p.category] === service.slug).slice(0, 3);
   const relatedServices = service.related.map(getService).filter((s) => s !== undefined);
   const areas = siteConfig.contact.serviceAreas;
   const whatsappMessage = service.whatsappMessage;
@@ -242,7 +242,7 @@ export default async function ServicePage(props: PageProps<"/[servicio]">) {
           <Container>
             <div className="flex flex-wrap items-end justify-between gap-4">
               <h2 id="relacionados-title" className="text-2xl font-extrabold text-navy sm:text-3xl">
-                Ideas de {lc(service.galleryCategory ?? "")}
+                Trabajos de {lc(service.name)}
               </h2>
               <Link href="/proyectos/" className="inline-flex items-center gap-1 font-bold text-brand-dark hover:underline">
                 Ver todos los proyectos <ArrowRightIcon className="size-4" />

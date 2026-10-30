@@ -13,7 +13,7 @@ import { btn, Container, DemoBadge, SectionHeading } from "../ui";
 const ownerStory: string[] = [];
 
 export function AboutSection({ headingLevel = "h2" }: { headingLevel?: "h1" | "h2" } = {}) {
-  const img = images.ventanalCorredera;
+  const img = images.showerCuadros;
   return (
     <section id="nosotros" aria-labelledby="nosotros-title" className="py-20 sm:py-24">
       <Container className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">

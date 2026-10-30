@@ -1,5 +1,4 @@
 import { images, type SiteImage } from "./images";
-import type { ProjectCategory } from "./projects";
 import type { FaqItem } from "./faq-types";
 
 /**
@@ -58,8 +57,6 @@ export type Service = {
   image: SiteImage;
   /** Fotos adicionales para la página. */
   extraImages: SiteImage[];
-  /** Categoría de la galería relacionada, para enlazar proyectos. */
-  galleryCategory?: ProjectCategory;
   seo: { title: string; description: string };
 };
 
@@ -168,9 +165,8 @@ export const services: Service[] = [
       },
     ],
     related: ["ventanas-de-pvc", "reparacion-de-ventanas-y-puertas", "cerramientos-de-terrazas"],
-    image: images.ventanasDormitorio,
-    extraImages: [images.ventanalCorredera],
-    galleryCategory: "Ventanas",
+    image: images.ventanaCorredera,
+    extraImages: [images.ventanalOscuro, images.ventanaFachada],
     seo: {
       title: "Ventanas de aluminio con termopanel",
       description:
@@ -236,9 +232,8 @@ export const services: Service[] = [
       },
     ],
     related: ["ventanas-de-aluminio", "puertas-de-aluminio-y-pvc", "reparacion-de-ventanas-y-puertas"],
-    image: images.ventanaPvc,
-    extraImages: [images.puertaPvcCocina],
-    galleryCategory: "PVC",
+    image: images.ventanaPvcOscilobatiente,
+    extraImages: [images.ventanasPvcTaller, images.ventanaPvcProyectante],
     seo: {
       title: "Ventanas de PVC y termopanel",
       description:
@@ -292,9 +287,8 @@ export const services: Service[] = [
       },
     ],
     related: ["mamparas-de-vidrio", "ventanas-de-pvc", "reparacion-de-ventanas-y-puertas"],
-    image: images.puertaComercial,
-    extraImages: [images.puertaPvcCocina],
-    galleryCategory: "Puertas",
+    image: images.puertaMadera,
+    extraImages: [images.puertaBlanca, images.puertaExterior],
     seo: {
       title: "Puertas de aluminio y PVC a medida",
       description:
@@ -373,9 +367,8 @@ export const services: Service[] = [
       },
     ],
     related: ["mamparas-de-vidrio", "reparacion-de-ventanas-y-puertas", "puertas-de-aluminio-y-pvc"],
-    image: images.showerMarmol,
-    extraImages: [images.showerBano, images.showerAzulejo],
-    galleryCategory: "Shower doors",
+    image: images.showerCuadros,
+    extraImages: [images.showerNegro, images.showerAcrilico],
     seo: {
       title: "Shower doors de vidrio templado",
       description:
@@ -432,7 +425,6 @@ export const services: Service[] = [
     related: ["ventanas-de-aluminio", "mamparas-de-vidrio", "puertas-de-aluminio-y-pvc"],
     image: images.terrazaPlegable,
     extraImages: [images.balconCerrado, images.terrazaCasa],
-    galleryCategory: "Terrazas",
     seo: {
       title: "Cerramientos de terrazas y balcones",
       description:
@@ -488,7 +480,6 @@ export const services: Service[] = [
     related: ["puertas-de-aluminio-y-pvc", "cerramientos-de-terrazas", "shower-doors"],
     image: images.puertaTerraza,
     extraImages: [images.divisionOficina, images.pasilloVidrio],
-    galleryCategory: "Mamparas",
     seo: {
       title: "Mamparas de vidrio a medida",
       description:
@@ -541,9 +532,8 @@ export const services: Service[] = [
       },
     ],
     related: ["mamparas-de-vidrio", "puertas-de-aluminio-y-pvc", "reparacion-de-ventanas-y-puertas"],
-    image: images.vitrinaExhibicion,
-    extraImages: [],
-    galleryCategory: "Vitrinas",
+    image: images.vitrinaIluminada,
+    extraImages: [images.vitrinaAluminio, images.vitrinaMostrador],
     seo: {
       title: "Vitrinas de vidrio a medida",
       description:
@@ -616,7 +606,7 @@ export const services: Service[] = [
     ],
     related: ["ventanas-de-aluminio", "ventanas-de-pvc", "shower-doors"],
     image: images.ventanalCorredera,
-    extraImages: [images.ventanaPvc],
+    extraImages: [],
     seo: {
       title: "Reparación de ventanas y puertas",
       description:

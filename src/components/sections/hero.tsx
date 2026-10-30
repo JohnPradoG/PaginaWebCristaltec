@@ -11,7 +11,7 @@ const highlights = [
 ];
 
 export function Hero() {
-  const img = images.hero;
+  const img = images.espejoMuroSala;
   return (
     <section id="inicio" aria-labelledby="hero-title" className="relative isolate overflow-hidden bg-navy-950">
       <Image

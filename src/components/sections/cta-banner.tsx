@@ -7,7 +7,7 @@ import { WhatsAppIcon } from "../icons";
 import { btn, Container, DemoBadge } from "../ui";
 
 export function CtaBanner() {
-  const img = images.terrazaCasa;
+  const img = images.ventanaFachada;
   return (
     <section aria-labelledby="cta-title" className="relative isolate overflow-hidden bg-navy">
       <Image src={img.src} alt="" fill sizes="100vw" className="-z-10 object-cover" />
