@@ -3,14 +3,25 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { categoryService, projectCategories, projects, type ProjectCategory } from "@/content/projects";
+import {
+  categoryService,
+  projectCategories,
+  projects,
+  type ProjectCategory,
+} from "@/content/projects";
 import { whatsappMessages } from "@/lib/whatsapp";
 import { WhatsAppLink } from "../whatsapp-link";
-import { ChevronLeftIcon, ChevronRightIcon, CloseIcon, PinIcon, PlusIcon, WhatsAppIcon } from "../icons";
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  CloseIcon,
+  PinIcon,
+  PlusIcon,
+  WhatsAppIcon,
+} from "../icons";
 import { btn, Container, DemoBadge, SectionHeading } from "../ui";
 
 type Filter = "Todos" | ProjectCategory;
-const filters: Filter[] = ["Todos", ...projectCategories];
 
 type GalleryProps = {
   /** Cantidad máxima de proyectos visibles (portada). Sin límite en /proyectos/. */
@@ -18,18 +29,51 @@ type GalleryProps = {
   /** "h1" cuando la galería es la página principal (/proyectos/). */
   headingLevel?: "h1" | "h2";
   title?: string;
+  intro?: string;
+  /** Solo estas categorías (páginas de servicio). Sin valor: todas. */
+  categories?: readonly ProjectCategory[];
+  /** id de la sección; en la portada es el ancla #proyectos. */
+  id?: string;
 };
 
-export function GallerySection({ limit, headingLevel = "h2", title = "Nuestros trabajos" }: GalleryProps = {}) {
+export function GallerySection({
+  limit,
+  headingLevel = "h2",
+  title = "Nuestros trabajos",
+  intro = "Fotos de trabajos realizados por CRISTALTEC: ventanas, puertas, shower doors, vitrinas y espejos. Toca una foto para verla en grande y recorre todas con las flechas.",
+  categories,
+  id = "proyectos",
+}: GalleryProps = {}) {
   const [filter, setFilter] = useState<Filter>("Todos");
+  const pool = useMemo(
+    () =>
+      categories
+        ? projects.filter((p) => categories.includes(p.category))
+        : projects,
+    [categories],
+  );
+  const counts = useMemo(() => {
+    const c = new Map<Filter, number>([["Todos", pool.length]]);
+    for (const p of pool) c.set(p.category, (c.get(p.category) ?? 0) + 1);
+    return c;
+  }, [pool]);
+  // Solo se muestran filtros con fotos; con una sola categoría no hacen falta.
+  const filters: Filter[] = [
+    "Todos",
+    ...projectCategories.filter((c) => counts.has(c)),
+  ];
+  const showFilters = filters.length > 2;
+  const touchX = useRef<number | null>(null);
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
 
   const visible = useMemo(() => {
-    const list = filter === "Todos" ? projects : projects.filter((p) => p.category === filter);
+    const list =
+      filter === "Todos" ? pool : pool.filter((p) => p.category === filter);
     return limit ? list.slice(0, limit) : list;
-  }, [filter, limit]);
+  }, [filter, limit, pool]);
+  const totalInFilter = counts.get(filter) ?? 0;
   const current = openIndex !== null ? visible[openIndex] : null;
   const hasDemo = visible.some((p) => p.image.demo);
 
@@ -39,7 +83,10 @@ export function GallerySection({ limit, headingLevel = "h2", title = "Nuestros t
   };
   const close = useCallback(() => setOpenIndex(null), []);
   const step = useCallback(
-    (delta: number) => setOpenIndex((i) => (i === null ? i : (i + delta + visible.length) % visible.length)),
+    (delta: number) =>
+      setOpenIndex((i) =>
+        i === null ? i : (i + delta + visible.length) % visible.length,
+      ),
     [visible.length],
   );
 
@@ -64,41 +111,60 @@ export function GallerySection({ limit, headingLevel = "h2", title = "Nuestros t
   }, [openIndex, step]);
 
   return (
-    <section id="proyectos" aria-labelledby="proyectos-title" className="bg-mist py-20 sm:py-24">
+    <section
+      id={id}
+      aria-labelledby={`${id}-title`}
+      className="bg-mist py-20 sm:py-24"
+    >
       <Container>
         <SectionHeading
-          id="proyectos-title"
+          id={`${id}-title`}
           eyebrow="Proyectos"
           title={title}
-          intro="Trabajos realizados por CRISTALTEC. Explora por categoría y consulta por uno similar para tu espacio."
+          intro={intro}
           as={headingLevel}
         />
 
-        <div role="group" aria-label="Filtrar proyectos por categoría" className="mt-10 -mx-4 overflow-x-auto px-4 pb-2">
-          <div className="flex w-max gap-2 sm:mx-auto sm:w-auto sm:flex-wrap sm:justify-center">
-            {filters.map((f) => (
-              <button
-                key={f}
-                type="button"
-                aria-pressed={filter === f}
-                onClick={() => setFilter(f)}
-                className={`min-h-11 rounded-full border px-5 text-[15px] font-bold whitespace-nowrap transition-colors ${
-                  filter === f
-                    ? "border-navy bg-navy text-white"
-                    : "border-navy/20 bg-white text-navy hover:border-navy"
-                }`}
-              >
-                {f}
-              </button>
-            ))}
+        {showFilters && (
+          <div
+            role="group"
+            aria-label="Filtrar proyectos por categoría"
+            className="mt-10 -mx-4 overflow-x-auto px-4 pb-2"
+          >
+            <div className="flex w-max gap-2 sm:mx-auto sm:w-auto sm:flex-wrap sm:justify-center">
+              {filters.map((f) => (
+                <button
+                  key={f}
+                  type="button"
+                  aria-pressed={filter === f}
+                  onClick={() => setFilter(f)}
+                  className={`min-h-11 rounded-full border px-5 text-[15px] font-bold whitespace-nowrap transition-colors ${
+                    filter === f
+                      ? "border-navy bg-navy text-white"
+                      : "border-navy/20 bg-white text-navy hover:border-navy"
+                  }`}
+                >
+                  {f}
+                  <span
+                    aria-hidden
+                    className={`ml-1.5 ${filter === f ? "text-white/70" : "text-ink-muted"}`}
+                  >
+                    {counts.get(f)}
+                  </span>
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         <p className="sr-only" aria-live="polite">
-          {visible.length} proyectos en {filter === "Todos" ? "todas las categorías" : filter}
+          {visible.length} proyectos en{" "}
+          {filter === "Todos" ? "todas las categorías" : filter}
         </p>
 
-        <ul className="mt-8 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3">
+        <ul
+          className={`${showFilters ? "mt-8" : "mt-10"} grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3`}
+        >
           {visible.map((project, index) => (
             <li key={project.id}>
               <button
@@ -114,34 +180,53 @@ export function GallerySection({ limit, headingLevel = "h2", title = "Nuestros t
                   sizes="(min-width: 1024px) 400px, calc(50vw - 22px)"
                   className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
                 />
-                <span aria-hidden className="absolute inset-0 bg-gradient-to-t from-navy-950/85 via-navy-950/10 to-transparent" />
+                <span
+                  aria-hidden
+                  className="absolute inset-0 bg-gradient-to-t from-navy-950/85 via-navy-950/10 to-transparent"
+                />
                 <span className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 p-3 sm:p-4">
                   <span>
                     <span className="block text-[11px] font-bold tracking-wider text-brand-light uppercase sm:text-xs">
                       {project.category}
                     </span>
-                    <span className="block text-sm leading-snug font-bold text-white sm:text-base">{project.title}</span>
+                    <span className="block text-sm leading-snug font-bold text-white sm:text-base">
+                      {project.title}
+                    </span>
                   </span>
                   <PlusIcon className="hidden size-6 shrink-0 text-white sm:block" />
                 </span>
-                {project.image.demo && <DemoBadge className="absolute top-2 left-2" />}
+                {project.image.demo && (
+                  <DemoBadge className="absolute top-2 left-2" />
+                )}
               </button>
             </li>
           ))}
         </ul>
 
-        {limit && (
+        {(limit || categories) && (
           <div className="mt-8 text-center">
+            {limit && totalInFilter > visible.length && (
+              <p className="mb-4 text-ink-muted">
+                Mostrando {visible.length} de {totalInFilter} fotos
+                {filter === "Todos"
+                  ? ""
+                  : ` de ${filter.toLowerCase().replace("pvc", "PVC")}`}
+                .
+              </p>
+            )}
             <Link href="/proyectos/" className={btn("outlineDark")}>
-              Ver todos los proyectos
+              {limit
+                ? `Ver las ${projects.length} fotos de trabajos`
+                : "Ver todos los trabajos"}
             </Link>
           </div>
         )}
 
         {hasDemo && (
           <p className="mt-6 text-center text-sm text-ink-muted">
-            Las fotografías marcadas como “Imagen referencial” son ejemplos ilustrativos de terceros y no corresponden a
-            trabajos realizados por CRISTALTEC.
+            Las fotografías marcadas como “Imagen referencial” son ejemplos
+            ilustrativos de terceros y no corresponden a trabajos realizados por
+            CRISTALTEC.
           </p>
         )}
       </Container>
@@ -155,9 +240,31 @@ export function GallerySection({ limit, headingLevel = "h2", title = "Nuestros t
       >
         {current && (
           <div className="relative overflow-hidden bg-navy-950 sm:rounded-2xl">
-            <div className="relative h-[62dvh] w-full bg-black sm:h-[70dvh]">
-              <Image src={current.image.src} alt={current.image.alt} fill sizes="(min-width: 1024px) 1000px, 100vw" className="object-contain" />
-              {current.image.demo && <DemoBadge className="absolute top-3 left-3" />}
+            <div
+              className="relative h-[62dvh] w-full touch-pan-y bg-black sm:h-[70dvh]"
+              onTouchStart={(e) => (touchX.current = e.touches[0].clientX)}
+              onTouchEnd={(e) => {
+                if (touchX.current === null) return;
+                const dx = e.changedTouches[0].clientX - touchX.current;
+                touchX.current = null;
+                if (Math.abs(dx) > 50) step(dx < 0 ? 1 : -1);
+              }}
+            >
+              <Image
+                src={current.image.src}
+                alt={current.image.alt}
+                fill
+                sizes="(min-width: 1024px) 1000px, 100vw"
+                className="object-contain"
+              />
+              {current.image.demo && (
+                <DemoBadge className="absolute top-3 left-3" />
+              )}
+              {openIndex !== null && visible.length > 1 && (
+                <p className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-navy-950/70 px-3 py-1 text-sm font-bold">
+                  {openIndex + 1} / {visible.length}
+                </p>
+              )}
               <button
                 type="button"
                 onClick={close}
@@ -189,26 +296,36 @@ export function GallerySection({ limit, headingLevel = "h2", title = "Nuestros t
             </div>
             <div className="flex flex-col gap-4 p-5 sm:flex-row sm:items-end sm:justify-between sm:p-6">
               <div>
-                <p className="text-xs font-bold tracking-wider text-brand-light uppercase">{current.category}</p>
+                <p className="text-xs font-bold tracking-wider text-brand-light uppercase">
+                  {current.category}
+                </p>
                 <h3 className="mt-1 text-xl font-extrabold">{current.title}</h3>
-                <p className="mt-2 max-w-xl text-white/85">{current.description}</p>
+                <p className="mt-2 max-w-xl text-white/85">
+                  {current.description}
+                </p>
                 {(current.need || current.solution || current.material) && (
                   <dl className="mt-3 max-w-xl space-y-1.5 text-sm text-white/85">
                     {current.need && (
                       <div>
-                        <dt className="inline font-bold text-white">Necesidad: </dt>
+                        <dt className="inline font-bold text-white">
+                          Necesidad:{" "}
+                        </dt>
                         <dd className="inline">{current.need}</dd>
                       </div>
                     )}
                     {current.solution && (
                       <div>
-                        <dt className="inline font-bold text-white">Solución: </dt>
+                        <dt className="inline font-bold text-white">
+                          Solución:{" "}
+                        </dt>
                         <dd className="inline">{current.solution}</dd>
                       </div>
                     )}
                     {current.material && (
                       <div>
-                        <dt className="inline font-bold text-white">Material: </dt>
+                        <dt className="inline font-bold text-white">
+                          Material:{" "}
+                        </dt>
                         <dd className="inline">{current.material}</dd>
                       </div>
                     )}
@@ -217,9 +334,17 @@ export function GallerySection({ limit, headingLevel = "h2", title = "Nuestros t
                 {current.before && (
                   <figure className="mt-3 w-40">
                     <div className="relative aspect-[4/3] overflow-hidden rounded-lg">
-                      <Image src={current.before.src} alt={current.before.alt} fill sizes="160px" className="object-cover" />
+                      <Image
+                        src={current.before.src}
+                        alt={current.before.alt}
+                        fill
+                        sizes="160px"
+                        className="object-cover"
+                      />
                     </div>
-                    <figcaption className="mt-1 text-xs text-white/75">Antes</figcaption>
+                    <figcaption className="mt-1 text-xs text-white/75">
+                      Antes
+                    </figcaption>
                   </figure>
                 )}
                 {categoryService[current.category] && (
@@ -227,7 +352,8 @@ export function GallerySection({ limit, headingLevel = "h2", title = "Nuestros t
                     href={`/${categoryService[current.category]}/`}
                     className="mt-3 inline-block text-sm font-bold text-brand-light underline"
                   >
-                    Ver servicio de {current.category.toLowerCase().replace("pvc", "PVC")}
+                    Ver servicio de{" "}
+                    {current.category.toLowerCase().replace("pvc", "PVC")}
                   </Link>
                 )}
                 {current.location && (
@@ -237,7 +363,10 @@ export function GallerySection({ limit, headingLevel = "h2", title = "Nuestros t
                 )}
               </div>
               <WhatsAppLink
-                message={whatsappMessages.similarProject(current.title, current.category)}
+                message={whatsappMessages.similarProject(
+                  current.title,
+                  current.category,
+                )}
                 trackLabel={`proyecto:${current.id}`}
                 className={btn("whatsapp", "shrink-0")}
               >

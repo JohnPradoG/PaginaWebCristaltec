@@ -18,7 +18,7 @@ export default function HomePage() {
       <Hero />
       <ServicesSection />
       <AdvantagesSection />
-      <GallerySection limit={6} />
+      <GallerySection limit={9} />
       <CtaBanner />
       <AboutSection />
       <PriceSection />

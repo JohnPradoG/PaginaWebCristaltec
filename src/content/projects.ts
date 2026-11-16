@@ -74,7 +74,7 @@ export const categoryService: Partial<Record<ProjectCategory, string>> = {
   Vitrinas: "vitrinas-a-medida",
 };
 
-/** Trabajos reales. Los primeros 6 se ven en la portada. */
+/** Trabajos reales. Los primeros 9 se ven en la portada. */
 export const projects: Project[] = [
   {
     id: "shower-cuadros",

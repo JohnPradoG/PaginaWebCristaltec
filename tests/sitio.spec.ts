@@ -107,6 +107,28 @@ test("galería: filtra por categoría y abre la vista ampliada", async ({ page }
   await expect(dialog).toBeHidden();
 });
 
+test("galería: la portada enlaza a todas las fotos y cada servicio muestra las suyas", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator("#proyectos ul > li")).toHaveCount(9);
+  await expect(page.locator("#proyectos").getByRole("link", { name: /^Ver las \d+ fotos de trabajos$/ })).toBeVisible();
+
+  await page.goto("/shower-doors/");
+  const trabajos = page.locator("#trabajos");
+  await expect(trabajos.locator("ul > li")).toHaveCount(13);
+  await trabajos.getByRole("button", { name: "Shower door acrílico", exact: true }).click();
+  await expect(trabajos.locator("ul > li")).toHaveCount(5);
+  await trabajos.locator("ul > li").first().getByRole("button").click();
+  const dialog = page.getByRole("dialog");
+  await expect(dialog.getByText("1 / 5")).toBeVisible();
+  await dialog.getByRole("button", { name: "Proyecto siguiente" }).click();
+  await expect(dialog.getByText("2 / 5")).toBeVisible();
+  await page.keyboard.press("Escape");
+
+  await page.goto("/vitrinas-a-medida/");
+  await expect(page.locator("#trabajos ul > li")).toHaveCount(4);
+  await expect(page.locator("#trabajos button[aria-pressed]")).toHaveCount(0);
+});
+
 test("navegación móvil", async ({ page, isMobile }) => {
   test.skip(!isMobile, "solo móvil");
   await page.goto("/");
