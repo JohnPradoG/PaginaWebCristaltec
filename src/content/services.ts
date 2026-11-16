@@ -478,8 +478,8 @@ export const services: Service[] = [
       },
     ],
     related: ["puertas-de-aluminio-y-pvc", "cerramientos-de-terrazas", "shower-doors"],
-    image: images.puertaTerraza,
-    extraImages: [images.divisionOficina, images.pasilloVidrio],
+    image: images.mamparaAcceso,
+    extraImages: [images.mamparaAcceso2, images.divisionOficina],
     seo: {
       title: "Mamparas de vidrio a medida",
       description:

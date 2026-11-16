@@ -38,6 +38,7 @@ export const projectCategories = [
   "Shower door vidrio templado",
   "Shower door acrílico",
   "Vitrinas",
+  "Mamparas",
   "Espejos",
 ] as const;
 
@@ -72,6 +73,7 @@ export const categoryService: Partial<Record<ProjectCategory, string>> = {
   "Shower door vidrio templado": "shower-doors",
   "Shower door acrílico": "shower-doors",
   Vitrinas: "vitrinas-a-medida",
+  Mamparas: "mamparas-de-vidrio",
 };
 
 /** Trabajos reales. Los primeros 9 se ven en la portada. */
@@ -96,6 +98,20 @@ export const projects: Project[] = [
     category: "Vitrinas",
     description: "Vitrina de vidrio con repisas de vidrio e iluminación para exhibir productos.",
     image: images.vitrinaIluminada,
+  },
+  {
+    id: "mampara-acceso-aluminio",
+    title: "Mampara de acceso de doble hoja",
+    category: "Mamparas",
+    description: "Mampara de acceso de dos hojas con perfiles de aluminio color bronce, integrada a una fachada de vidrio.",
+    image: images.mamparaAcceso,
+  },
+  {
+    id: "mampara-acceso-aluminio-frontal",
+    title: "Mampara de vidrio con perfil bronce",
+    category: "Mamparas",
+    description: "Vista frontal de la mampara de acceso: dos hojas de vidrio con perfiles de aluminio bronce, manillas y cerradura.",
+    image: images.mamparaAcceso2,
   },
   {
     id: "puerta-corredera-madera",

@@ -55,6 +55,16 @@ export const images = {
     alt: "Vitrina mostrador de aluminio y vidrio con repisas interiores",
     demo: false,
   },
+  mamparaAcceso: {
+    src: "/proyectos/mampara-acceso-aluminio-01.webp",
+    alt: "Mampara de acceso de doble hoja con perfiles de aluminio color bronce en fachada de vidrio",
+    demo: false,
+  },
+  mamparaAcceso2: {
+    src: "/proyectos/mampara-acceso-aluminio-02.webp",
+    alt: "Vista frontal de mampara de vidrio de doble hoja con perfiles de aluminio bronce, manillas y cerradura",
+    demo: false,
+  },
   vitrinaMostrador: {
     src: "/proyectos/vitrina-mostrador-01.webp",
     alt: "Vitrina mostrador de vidrio lista para entregar, protegida con film",
